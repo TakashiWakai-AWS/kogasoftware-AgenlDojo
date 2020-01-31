@@ -1,2 +1,2 @@
-# kogasoftware-AgenlADjo
+# kogasoftware-AgenlDojo
 コガソフトウェア株式会社でのANGELDojoの疑似プロジェクトを管理します。
