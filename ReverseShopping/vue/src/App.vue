@@ -1,12 +1,24 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <Header></Header>
     <router-view/>
   </div>
 </template>
+
+<script>
+import Header from "./components/Header.vue"
+
+export default {
+  components: {
+    Header
+  },
+  data() {
+    return {
+      isLoggedIn : false
+    }
+  }
+}
+</script>
 
 <style>
 #app {
@@ -17,9 +29,10 @@
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+.button {
+  border-color: #354B5E !important;
 }
+
 
 #nav a {
   font-weight: bold;
