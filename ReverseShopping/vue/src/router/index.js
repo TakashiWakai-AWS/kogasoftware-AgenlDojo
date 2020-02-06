@@ -4,6 +4,8 @@ import Top from '../views/Top.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
 import User from '../views/User.vue'
+import NeedsRegister from '../views/NeedsRegister.vue'
+import NeedsDetail from '../views/NeedsDetail.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +29,16 @@ const routes = [
     path: '/user',
     name: 'user',
     component: User
+  },
+  {
+    path: '/needs-register',
+    name: 'needs-register',
+    component: NeedsRegister
+  },
+  {
+    path: '/needs-detail',
+    name: 'needs-detail',
+    component: NeedsDetail
   },
 ]
 

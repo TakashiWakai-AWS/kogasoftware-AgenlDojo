@@ -11,6 +11,10 @@ Vue.use(BootstrapVueIcons)
 
 Vue.config.productionTip = false
 
+Vue.filter('addComma', function(val) {
+  return val.toLocaleString();
+});
+
 new Vue({
   router,
   store,

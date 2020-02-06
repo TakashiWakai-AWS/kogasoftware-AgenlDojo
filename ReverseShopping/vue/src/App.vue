@@ -10,7 +10,7 @@ import Header from "./components/Header.vue"
 
 export default {
   components: {
-    Header
+    Header,
   },
   data() {
     return {
@@ -29,7 +29,16 @@ export default {
   color: #2c3e50;
 }
 
+h1 {
+  color: #354B5E;
+}
+
 .button {
+  border-color: #354B5E !important;
+}
+
+.red-button {
+  background-color: #D74B4B !important;
   border-color: #354B5E !important;
 }
 
