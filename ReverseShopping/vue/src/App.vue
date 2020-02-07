@@ -29,6 +29,7 @@ h1 {
 }
 
 .button {
+  background-color: #475F77 !important;
   border-color: #354B5E !important;
 }
 
