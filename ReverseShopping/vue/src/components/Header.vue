@@ -19,13 +19,10 @@
           </template>
         </b-navbar-nav>
     </b-navbar>
-    <b-modal
-      id="modal-1"
-      title="確認"
-    >
+    <b-modal id="modal-1" title="確認">
       <p class="my-4">ログアウトしますか？</p>
       <div slot="modal-footer">
-          <b-btn variant="primary" class="mr-2">はい</b-btn>
+          <b-btn to="/" @click="signOut" variant="primary" class="mr-2">はい</b-btn>
           <b-btn @click="$bvModal.hide('modal-1')" class="button">いいえ</b-btn>
       </div>
     </b-modal>
@@ -36,6 +33,12 @@
 
 export default {
   name: 'Header',
+  methods: {
+    signOut() {
+      this.$store.commit('signOut');
+      this.$bvModal.hide('modal-1');
+    }
+  }
 }
 </script>
 
