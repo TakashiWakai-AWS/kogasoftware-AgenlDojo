@@ -11,11 +11,6 @@ import Header from "./components/Header.vue"
 export default {
   components: {
     Header,
-  },
-  data() {
-    return {
-      isLoggedIn : false
-    }
   }
 }
 </script>
@@ -41,7 +36,6 @@ h1 {
   background-color: #D74B4B !important;
   border-color: #354B5E !important;
 }
-
 
 #nav a {
   font-weight: bold;

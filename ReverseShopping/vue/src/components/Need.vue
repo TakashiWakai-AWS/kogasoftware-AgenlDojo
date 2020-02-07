@@ -2,7 +2,7 @@
   <div class="need w-75">
     <div class="needs-info d-flex justify-content-between">
       <ul>
-        <li>名前:{{ need.name }}</li>
+        <li>名前: {{ need.name }}</li>
         <li>希望価格: {{ need.price | addComma }}円</li>
         <li>個数： {{ need.number }}</li>
         <li>期限： {{ need.deadline }}</li>
@@ -17,11 +17,7 @@
 <script>
 export default {
   name: 'Need',
-  data() {
-    return {
-    }
-  },
-  props: ['need']
+  props: {'need': Object}
 }
 </script>
 
