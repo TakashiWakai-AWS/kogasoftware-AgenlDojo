@@ -2,14 +2,14 @@
   <div class="need w-75">
     <div class="needs-info d-flex justify-content-between">
       <ul>
-        <li>名前: {{ need.name }}</li>
+        <li>名前: {{ need.item_name }}</li>
         <li>希望価格: {{ need.price | addComma }}円</li>
-        <li>個数： {{ need.number }}</li>
-        <li>期限： {{ need.deadline }}</li>
-        <li>詳細： {{ need.description }}</li>
-        <li><router-link to="/needs-detail">詳細画面へ</router-link></li>
+        <li>個数： {{ need.quantitiy }}</li>
+        <li>期限： {{ need.end_at | moment("YYYY/MM/DD") }}</li>
+        <li>詳細： {{ need.note }}</li>
+        <li><router-link :to="{name: 'needs-detail', params: {id: need.id}}">詳細画面へ</router-link></li>
       </ul>
-      <router-link tag="div" class="needs-image mr-0" to="/needs-detail"><img :src="need.image" alt="写真"></router-link>
+      <router-link tag="div" class="needs-image mr-0" :to="{name: 'needs-detail', params: {id: need.id}}"><img :src="need.image_path" alt="写真"></router-link>
     </div>
   </div>
 </template>
@@ -41,7 +41,7 @@ li {
 img {
   height: 300px;
   width: 300px;
-  border-radius: 0 10px 10px 0; 
+  border-radius: 0 10px 10px 0;
 }
 
 .needs-image {

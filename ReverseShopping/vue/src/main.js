@@ -5,12 +5,14 @@ import store from './store'
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VueMoment from 'vue-moment'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(VueAxios, axios) 
+Vue.use(VueMoment);
 
 Vue.config.productionTip = false
 

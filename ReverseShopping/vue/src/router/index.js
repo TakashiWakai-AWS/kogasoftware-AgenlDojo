@@ -6,6 +6,8 @@ import SignUp from '../views/SignUp.vue'
 import User from '../views/User.vue'
 import NeedsRegister from '../views/NeedsRegister.vue'
 import NeedsDetail from '../views/NeedsDetail.vue'
+import GoodsDetail from '../views/GoodsDetail.vue'
+import GoodsRegister from '../views/GoodsRegister.vue'
 
 Vue.use(VueRouter)
 
@@ -36,9 +38,28 @@ const routes = [
     component: NeedsRegister
   },
   {
-    path: '/needs-detail',
+    path: '/needs-detail/:id',
     name: 'needs-detail',
-    component: NeedsDetail
+    component: NeedsDetail,
+    props: true
+  },
+  {
+    path: '/needs-edit/:id',
+    name: 'needs-edit',
+    component: NeedsRegister,
+    props: true
+  },
+  {
+    path: '/goods-detail/:id',
+    name: 'goods-detail',
+    component: GoodsDetail,
+    props: true
+  },
+  {
+    path: '/goods-register',
+    name: 'goods-register',
+    component: GoodsRegister,
+    props: true
   },
 ]
 
