@@ -82,6 +82,12 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    signIn(state) {
+      state.isLoggedIn = true;
+    },
+    signOut(state) {
+      state.isLoggedIn = false;
+    }
   },
   actions: {
   },

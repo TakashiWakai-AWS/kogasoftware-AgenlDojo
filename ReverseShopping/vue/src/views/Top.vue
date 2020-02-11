@@ -8,23 +8,23 @@
         placeholder="ニーズを検索してください"
       ></b-form-input>
       <b-button class="button mt-4" size="sm">検索</b-button>
-      <b-button to="/needs-register" class="red-button mt-4 ml-2" size="sm">ニーズを登録する</b-button>
+      <b-button
+        to="/needs-register"
+        class="red-button mt-4 ml-2"
+        size="sm"
+      >ニーズを登録する</b-button>
     </b-form>
     <h2>ニーズ一覧</h2>
-    <div class="d-frex flex-column">
-      <Need v-for="need in $store.state.needsDataList" :key="need.id" :need="need"></Need>
-    </div>
+    <NeedsList></NeedsList>
   </div>
 </template>
 
 <script>
-import Need from "../components/Need.vue"
+import NeedsList from "../components/NeedsList.vue"
 
 export default {
   name: 'Top',
-  components: {
-    Need
-  }
+  components: { NeedsList },
 }
 </script>
 
