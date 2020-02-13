@@ -1,46 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     isLoggedIn : false,
-    needsDataList : [
-      {
-        'id': '1',
-        'user_id': '1',
-        'item_name': 'good1',
-        'price': 10000,
-        'quantitiy': '1',
-        'start_at': '2020-02-01',
-        'end_at': '2020-03-31',
-        'note': 'good1です。',
-        'image_path': require('../assets/image001.jpg')
-      },
-      {
-        'id': '2',
-        'user_id': '2',
-        'item_name': 'good2',
-        'price': 20000,
-        'quantitiy': '1',
-        'start_at': '2020-02-01',
-        'end_at': '2020-03-31',
-        'note': 'good2です。',
-        'image_path': require('../assets/image002.jpg')
-      },
-      {
-        'id': '3',
-        'user_id': '1',
-        'item_name': 'good3',
-        'price': 30000,
-        'quantitiy': '1',
-        'start_at': '2020-02-01',
-        'end_at': '2020-03-31',
-        'note': 'good3です。',
-        'image_path': require('../assets/image003.jpg')
-      },
-    ],
+    needsDataList : [],
     loginUserData: {
         'id': '1',
         'name': 'hoge',
@@ -87,9 +54,23 @@ export default new Vuex.Store({
     },
     signOut(state) {
       state.isLoggedIn = false;
+    },
+    getNeeds(state, payload) {
+      state.needsDataList = payload.needsDataList 
     }
   },
   actions: {
+    async getNeeds(context) {
+      const payload = {
+        needsDataList: [],
+      };
+      const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/home-screen';
+      await axios.get(url)
+      .then(response => {
+        payload.needsDataList = response.data;
+      });
+      context.commit('getNeeds', payload);
+    }
   },
   modules: {
   }

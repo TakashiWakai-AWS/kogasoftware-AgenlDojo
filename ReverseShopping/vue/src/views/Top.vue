@@ -25,6 +25,9 @@ import NeedsList from "../components/NeedsList.vue"
 export default {
   name: 'Top',
   components: { NeedsList },
+  mounted() {
+    this.$store.dispatch('getNeeds');
+  }
 }
 </script>
 
@@ -32,5 +35,4 @@ export default {
 h2 {
   margin-top: 100px;
 }
-
 </style>
