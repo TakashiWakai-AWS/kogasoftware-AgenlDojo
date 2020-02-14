@@ -10,8 +10,7 @@
         <b-col>
           <p>名前：{{need.item_name}}</p>
           <p>希望価格：{{need.price | addComma}}</p>
-          <p>個数：{{need.quantitiy}}</p>
-          <p>期限：{{need.end_at}}</p>
+          <p>期限：{{need.end_at | moment("YYYY/MM/DD")}}</p>
           <p>備考：{{need.note}}</p>
           <b-button :to="{name: 'needs-edit', params: {id: need.id}}" class="button" size="sm" v-if="user_id === need.user_id">編集</b-button>
           <b-button to="/goods-register" class="button" size="sm" v-else>出品</b-button>
