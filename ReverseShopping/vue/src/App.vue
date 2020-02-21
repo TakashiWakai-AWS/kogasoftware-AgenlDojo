@@ -2,15 +2,19 @@
   <div id="app">
     <Header></Header>
     <router-view/>
+    <CompleteModal/>
+    <ConfirmModal/>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue"
+import CompleteModal from './components/CompleteModal.vue'
+import ConfirmModal from './components/ConfirmModal.vue'
 
 export default {
   components: {
-    Header,
+    Header, CompleteModal, ConfirmModal
   }
 }
 </script>
@@ -22,6 +26,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  padding-top: 50px;
 }
 
 h1 {

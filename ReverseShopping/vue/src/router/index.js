@@ -61,6 +61,12 @@ const routes = [
     component: GoodsRegister,
     props: true
   },
+  {
+    path: '/goods-edit/:id',
+    name: 'goods-edit',
+    component: GoodsRegister,
+    props: true
+  },
 ]
 
 const router = new VueRouter({
