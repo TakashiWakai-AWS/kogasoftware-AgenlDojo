@@ -2,19 +2,15 @@
   <div id="app">
     <Header></Header>
     <router-view/>
-    <CompleteModal/>
-    <ConfirmModal/>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue"
-import CompleteModal from './components/CompleteModal.vue'
-import ConfirmModal from './components/ConfirmModal.vue'
 
 export default {
   components: {
-    Header, CompleteModal, ConfirmModal
+    Header,
   }
 }
 </script>

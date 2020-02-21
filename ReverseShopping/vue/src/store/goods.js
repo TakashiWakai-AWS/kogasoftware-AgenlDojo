@@ -94,6 +94,19 @@ const goodsModule = {
       }
       context.commit('getGood', payload);
     },
+    async getGoodsByUserId(context) {
+      context.commit('startNeedsLoading')
+      const payload = {
+        dataList: [],
+      };
+      const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods/user';
+      const user_id = context.rootState.user.data.id
+      await axios.get(`${url}/${user_id}`)
+      .then(response => {
+        payload.dataList = response.data;
+      });
+      context.commit('getGoods', payload);
+    },
   }
 }
 

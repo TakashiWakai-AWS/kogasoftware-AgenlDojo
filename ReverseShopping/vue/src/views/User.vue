@@ -49,8 +49,8 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('getLatestsNeeds');
-    this.$store.dispatch('getGoodsTest');
+    this.$store.dispatch('getNeedsByUserId');
+    this.$store.dispatch('getGoodsByUserId');
   }
 }
 </script>
