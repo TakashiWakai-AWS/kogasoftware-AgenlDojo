@@ -3,7 +3,7 @@
     <b-navbar id="header" toggleable="lg" type="dark" variant="#333">
       <b-navbar-brand to="/">Reverse Shopping</b-navbar-brand>
         <b-navbar-nav class="ml-auto">
-          <template v-if="$store.state.isLoggedIn">
+          <template v-if="$store.state.user.isLoggedIn">
             <div id="user-link-wrapper" class="mr-4">
                 ようこそ<b-link id="user-link" to="/user">
                           {{ $store.state.user.data.name }}
@@ -13,15 +13,16 @@
               @click="confirm"
               size="sm"
               class="button my-2 mr-2 my-sm-0"
-            >ログアウト</b-button>
+            >ログアウト</b-button> -->
+            <amplify-sign-out v-b-modal.modal-logout/>
           </template>
           <template v-else>
             <b-button  to="/sign-in" size="sm" class="button my-2 mr-2 my-sm-0">
               ログイン
             </b-button>
-            <b-button to="/sign-up" size="sm" class="button my-2 my-sm-0">
+            <!-- <b-button to="/sign-up" size="sm" class="button my-2 my-sm-0">
               新規登録
-            </b-button>
+            </b-button> -->
           </template>
         </b-navbar-nav>
     </b-navbar>
@@ -38,6 +39,9 @@ import ErrorModal from '../components/ErrorModal.vue'
 
 export default {
   name: 'Header',
+  async beforeCreate() {
+    this.$store.dispatch('getUserInfoFromCognito');
+  },
   methods: {
     signOut() {
       this.$store.commit('signOut');

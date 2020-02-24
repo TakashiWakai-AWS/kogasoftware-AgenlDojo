@@ -60,6 +60,9 @@ import Need from "../components/Need.vue"
 export default {
   name: 'User',
   components: { NeedsList, GoodsList, Loading, Need },
+  async beforeCreate() {
+    this.$store.dispatch('getUserInfoFromCognito');
+  },
   data() {
     return {
       userData: {},
