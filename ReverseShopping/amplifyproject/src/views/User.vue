@@ -42,6 +42,9 @@ import GoodsList from "../components/GoodsList.vue"
 export default {
   name: 'User',
   components: { NeedsList, GoodsList },
+  async beforeCreate() {
+    this.$store.dispatch('getUserInfoFromCognito');
+  },
   data() {
     return {
       userData: this.$store.state.user.data,
@@ -49,6 +52,7 @@ export default {
     }
   },
   mounted() {
+    this.$store.dispatch('getUserInfoFromCognito');
     this.$store.dispatch('getNeedsByUserId');
     this.$store.dispatch('getGoodsByUserId');
   }

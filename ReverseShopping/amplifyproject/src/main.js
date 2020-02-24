@@ -8,7 +8,12 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueMoment from 'vue-moment'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import Amplify, * as AmplifyModules from 'aws-amplify'
+import { AmplifyPlugin } from 'aws-amplify-vue'
+import awsconfig from './aws-exports'
+Amplify.configure(awsconfig)
 
+Vue.use(AmplifyPlugin, AmplifyModules)
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 Vue.use(VueAxios, axios)

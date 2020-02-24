@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Top from '../views/Top.vue'
-import SignIn from '../views/SignIn.vue'
-import SignUp from '../views/SignUp.vue'
+// import SignIn from '../views/SignIn.vue'
+// import SignUp from '../views/SignUp.vue'
+import SignUpAmplifyDefault from '../views/SignUpAmplifyDefault.vue'
 import User from '../views/User.vue'
 import NeedsRegister from '../views/NeedsRegister.vue'
 import NeedsDetail from '../views/NeedsDetail.vue'
@@ -17,15 +18,20 @@ const routes = [
     name: 'top',
     component: Top
   },
+  // {
+  //   path: '/sign-in',
+  //   name: 'sign-in',
+  //   component: SignIn
+  // },
+  // {
+  //   path: '/sign-up',
+  //   name: 'sign-up',
+  //   component: SignUp
+  // },
   {
     path: '/sign-in',
     name: 'sign-in',
-    component: SignIn
-  },
-  {
-    path: '/sign-up',
-    name: 'sign-up',
-    component: SignUp
+    component: SignUpAmplifyDefault
   },
   {
     path: '/user',
