@@ -30,19 +30,27 @@
     </table>
     <h2>募集中一覧</h2>
     <NeedsList></NeedsList>
+    <h2>出品中一覧</h2>
+    <GoodsList v-for="good in goods" :key="good.id" :good="good"/>
   </div>
 </template>
 
 <script>
 import NeedsList from "../components/NeedsList.vue"
+import GoodsList from "../components/GoodsList.vue"
 
 export default {
   name: 'User',
-  components: { NeedsList },
+  components: { NeedsList, GoodsList },
   data() {
     return {
-      userData: this.$store.state.loginUserData
+      userData: this.$store.state.user.data,
+      goods: this.$store.state.goods.dataList
     }
+  },
+  mounted() {
+    this.$store.dispatch('getNeedsByUserId');
+    this.$store.dispatch('getGoodsByUserId');
   }
 }
 </script>

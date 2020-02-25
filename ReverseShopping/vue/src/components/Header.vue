@@ -1,16 +1,16 @@
 <template>
-  <div class="header">
+  <div class="header fixed-top">
     <b-navbar id="header" toggleable="lg" type="dark" variant="#333">
       <b-navbar-brand to="/">Reverse Shopping</b-navbar-brand>
         <b-navbar-nav class="ml-auto">
           <template v-if="$store.state.isLoggedIn">
             <div id="user-link-wrapper" class="mr-4">
                 ようこそ<b-link id="user-link" to="/user">
-                          {{ $store.state.loginUserData.name }}
+                          {{ $store.state.user.data.name }}
                         </b-link>さん
-            </div>   
+            </div>
             <b-button
-              v-b-modal.modal-1
+              v-b-modal.modal-logout
               size="sm"
               class="button my-2 mr-2 my-sm-0"
             >ログアウト</b-button>
@@ -25,29 +25,22 @@
           </template>
         </b-navbar-nav>
     </b-navbar>
-    <b-modal id="modal-1" title="確認">
-      <p class="my-4">ログアウトしますか？</p>
-      <div slot="modal-footer">
-          <b-btn to="/" @click="signOut" variant="primary" class="mr-2">
-            はい
-          </b-btn>
-          <b-btn @click="$bvModal.hide('modal-1')" class="button">
-            いいえ
-          </b-btn>
-      </div>
-    </b-modal>
+    <ConfirmModal id="modal-logout" text="ログアウトしますか？" :action="signOut"/>
   </div>
 </template>
 
 <script>
+import ConfirmModal from '../components/ConfirmModal.vue'
+
 export default {
   name: 'Header',
   methods: {
     signOut() {
       this.$store.commit('signOut');
-      this.$bvModal.hide('modal-1');
+      this.$bvModal.hide('modal-logout');
     }
-  }
+  },
+  components: { ConfirmModal }
 }
 </script>
 
