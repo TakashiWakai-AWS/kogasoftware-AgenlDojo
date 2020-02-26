@@ -82,7 +82,7 @@ const needsModule = {
       const need = context.rootState.needs.dataList.find((c) => c.id === params.id)
       // const need = false
       if (need) {
-        payload.data = need
+        payload.data = need;
       } else {
         const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
         await axios.get(`${url}/${params.id}`)
