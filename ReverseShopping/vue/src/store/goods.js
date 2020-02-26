@@ -72,9 +72,15 @@ const goodsModule = {
       const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/goods';
       await axios.get(`${url}/${params.id}`)
       .then(response => {
+        if (response.data.errorMessage) throw Error()
         payload.dataList = response.data;
-      });
-      context.commit('getGoods', payload);
+        context.commit('getGoods', payload);
+      }).catch(
+        function(err) {
+          console.log({err})
+          context.commit('getError', '出品の取得に失敗しました。');
+        }
+      )
     },
     async getGoodById(context, params) {
       context.commit('startGoodsLoading')
@@ -90,7 +96,12 @@ const goodsModule = {
         await axios.get(`${url}/${params.id}`)
         .then(response => {
           payload.data = response.data[0];
-        });
+        }).catch(
+          function(err) {
+            console.log({err})
+            context.commit('getError', '出品の取得に失敗しました。');
+          }
+        )
       }
       context.commit('getGood', payload);
     },
@@ -104,8 +115,47 @@ const goodsModule = {
       await axios.get(`${url}/${user_id}`)
       .then(response => {
         payload.dataList = response.data;
-      });
+      }).catch(
+        function(err) {
+          console.log({err})
+          context.commit('getError', '出品一覧の取得に失敗しました。');
+        }
+      )
       context.commit('getGoods', payload);
+    },
+    async insertGoods(context, { good, image, needs_id }) {
+      const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods';
+      const user_id = context.rootState.user.data.id
+      await axios.post(url, {
+        "needs_id": needs_id,
+        "user_id": user_id,
+        "item_status": 1,
+        "quantity": 1,
+        "note": good.note,
+        "image": image
+      }).catch(
+        function(err) {
+          console.log({err})
+          context.commit('getError', '出品登録に失敗しました。');
+        }
+      )
+    },
+    async updateGoods(context, { good, image, needs_id, goods_id }) {
+      const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods';
+      const user_id = context.rootState.user.data.id
+      await axios.post(`${url}/${goods_id}`, {
+        "needs_id": needs_id,
+        "user_id": user_id,
+        "item_status": 1,
+        "quantity": 1,
+        "note": good.note,
+        "image": image
+      }).catch(
+        function(err) {
+          console.log({err})
+          context.commit('getError', '出品登録に失敗しました。');
+        }
+      )
     },
   }
 }

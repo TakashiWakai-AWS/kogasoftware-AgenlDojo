@@ -1,6 +1,10 @@
 <template>
   <div class="d-frex flex-column">
-    <Need v-for="need in $store.state.needs.dataList"
+    <p v-if="$store.state.needs.dataList.length === 0" class="mt-5 nothing">
+      該当するニーズがありません
+    </p>
+    <Need v-else
+          v-for="need in $store.state.needs.dataList"
           :key="need.id"
           :need="need"></Need>
   </div>
@@ -16,5 +20,7 @@ export default {
 </script>
 
 <style scoped>
-
+.nothing {
+  font-size: 20px;
+}
 </style>

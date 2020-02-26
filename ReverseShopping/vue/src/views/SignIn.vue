@@ -13,6 +13,7 @@ export default {
   methods: {
     signIn() {
       this.$store.commit('signIn');
+      this.$store.dispatch('getUserTest');
     }
   }
 }

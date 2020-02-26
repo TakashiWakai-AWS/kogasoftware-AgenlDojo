@@ -10,7 +10,7 @@
                         </b-link>さん
             </div>
             <b-button
-              v-b-modal.modal-logout
+              @click="confirm"
               size="sm"
               class="button my-2 mr-2 my-sm-0"
             >ログアウト</b-button>
@@ -25,22 +25,34 @@
           </template>
         </b-navbar-nav>
     </b-navbar>
-    <ConfirmModal id="modal-logout" text="ログアウトしますか？" :action="signOut"/>
+    <ConfirmModal/>
+    <CompleteModal/>
+    <ErrorModal/>
   </div>
 </template>
 
 <script>
 import ConfirmModal from '../components/ConfirmModal.vue'
+import CompleteModal from '../components/CompleteModal.vue'
+import ErrorModal from '../components/ErrorModal.vue'
 
 export default {
   name: 'Header',
   methods: {
     signOut() {
       this.$store.commit('signOut');
-      this.$bvModal.hide('modal-logout');
+      this.$store.commit('clearUser');
+      this.$store.commit('hideConfirmModal')
+    },
+    confirm() {
+      this.$store.commit('showConfirmModal', {
+        text: 'ログアウトしますか？',
+        action: this.signOut,
+        transition: false
+      })
     }
   },
-  components: { ConfirmModal }
+  components: { ConfirmModal, CompleteModal, ErrorModal }
 }
 </script>
 

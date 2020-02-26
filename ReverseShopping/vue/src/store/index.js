@@ -3,6 +3,9 @@ import Vuex from 'vuex'
 import needsModule from './needs.js'
 import goodsModule from './goods.js'
 import userModule from './user.js'
+import completeModalModule from './completeModal.js'
+import confirmModalModule from './confirmModal.js'
+import errorModalModule from './errorModal.js'
 
 Vue.use(Vuex)
 
@@ -21,6 +24,9 @@ export default new Vuex.Store({
   modules: {
     needs: needsModule,
     goods: goodsModule,
-    user: userModule
-  }
+    user: userModule,
+    completeModal: completeModalModule,
+    confirmModal: confirmModalModule,
+    errorModal: errorModalModule
+  },
 })

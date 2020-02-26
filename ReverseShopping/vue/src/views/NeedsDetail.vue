@@ -21,7 +21,7 @@
       </b-container>
       <div v-if="goods.length > 0" class="nav-tabs-wrap my-5 mx-auto">
         <div class="nav nav-tabs">
-          <Good v-for="good in goods" :key="good.id" :good="good"></Good>
+          <Good v-for="good in goods" :key="good.id" :good="good" :confirm="confirm" :complete="complete"></Good>
         </div>
       </div>
       <p v-else class="mt-5 text-center">出品はありません</p>
@@ -36,22 +36,40 @@ export default {
   name: 'NeedsDetail',
   data: function () {
     return {
-      need: this.$store.state.needs.data,
+      need: {},
       user_id: this.$store.state.user.data.id,
-      goods: this.$store.state.goods.dataList,
+      goods: {},
       path: ''
     }
   },
   props: {
-    'id': String
+    'id': [String, Number]
   },
   components: {
     Good, Loading
   },
   mounted () {
-    this.$store.dispatch('getGoodsByNeedsId', { id: this.id });
+    // this.$store.dispatch('getGoodsByNeedsId', { id: this.id });
+    this.$store.dispatch('getGoodsTest');
     this.$store.dispatch('getNeedById', { id: this.id });
+    this.need = this.$store.state.needs.data
+    this.goods = this.$store.state.goods.dataList
     this.path = this.need.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
+  },
+  methods: {
+    complete() {
+      this.$store.commit('hideConfirmModal')
+      this.$store.commit('showCompleteModal', {
+        text: '購入が完了しました。'
+      })
+    },
+    confirm() {
+      this.$store.commit('showConfirmModal', {
+        text: '購入しますか？',
+        action: this.complete,
+        transition: false
+      })
+    }
   }
 }
 </script>

@@ -3,7 +3,7 @@
     <div class="modal__bg" role="document">
       <div class="modal-content mt-5 w-75 mx-auto">
         <div class="modal-header">
-          <h5 class="modal-title" id="label1">確認</h5>
+          <h5 class="modal-title" id="label1">エラー</h5>
           <button type="button" class="close"  @click="hide" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -12,9 +12,8 @@
           {{ state.text }}
         </div>
         <div class="modal-footer">
-          <b-btn variant="primary" class="mr-2" to="/" @click="ok" v-if="state.transition === true">はい</b-btn>
-          <b-btn variant="primary" class="mr-2" @click="state.action" v-else>はい</b-btn>
-          <b-btn @click="hide" class="button">いいえ</b-btn>
+          <b-btn variant="primary" class="mr-2" v-if="state.next" @click="hide" :to="state.next">{{state.nextButton}}</b-btn>
+          <b-btn variant="primary" class="mr-2" @click="hide">閉じる</b-btn>
         </div>
       </div>
     </div>
@@ -22,19 +21,15 @@
 </template>
 <script>
 export default {
-  name: 'ConfirmModal',
+  name: 'ErrorModal',
   data () {
     return {
-      state: this.$store.state.confirmModal
+      state: this.$store.state.errorModal
     }
   },
   methods: {
     hide() {
-      this.$store.commit('hideConfirmModal')
-    },
-    ok() {
-      this.state.action
-      this.$store.commit('hideConfirmModal')
+      this.$store.commit('hideErrorModal')
     }
   }
 }
