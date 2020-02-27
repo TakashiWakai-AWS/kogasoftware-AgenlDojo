@@ -23,7 +23,7 @@
         </div>
         <div class="form-group row mt-3" v-else>
           <label for="image_path" class="col-sm-2 col-form-label text-left">画像：</label>
-          <b-form-file v-model="image" class="col-sm-10" plain></b-form-file>
+          <b-form-file id="image-input" @change="selectedFile" type="file" name="imagefile"></b-form-file>
         </div>
         <b-form-textarea
           id="textarea"
@@ -38,35 +38,46 @@
     </div>
   </div>
 </template>
-<script>
+<script>import moment from "moment"
 import Loading from "../components/Loading.vue"
 
 export default {
   data: function () {
     return {
-      need: this.id ? this.$store.state.needs.data : {},
-      image: null
+      need: {},
+      uploadFile: null
     }
   },
   props: {
     'id': [String, Number]
   },
   components: { Loading },
-  mounted () {
-    if(this.id) this.$store.dispatch('getNeedById', { id: this.id });
+  created () {
+    if(this.id) {
+      this.$store.dispatch('getNeedById', { id: this.id });
+      this.need = this.$store.state.needs.data
+      this.need.start_at = moment(Date(this.need.start_at)).format("YYYY-MM-DD");
+      this.need.end_at = moment(Date(this.need.end_at)).format("YYYY-MM-DD");
+    }
   },
   methods: {
+    selectedFile() {
+        // 選択された File の情報を保存しておく
+        const image_input = document.getElementById('image-input');
+        const files = image_input.files;
+        this.uploadFile = files[0];
+    },
     submit() {
       if (this.id) {
         this.$store.dispatch('updateNeeds', {
           needs_id: this.id,
           need: this.need,
-          image: this.image
+          file: this.uploadFile
         });
       } else {
         this.$store.dispatch('insertNeeds', {
           need: this.need,
-          image: this.image
+          file: this.uploadFile
         });
       }
     },
@@ -90,8 +101,7 @@ export default {
         this.$store.commit('notLogedInError');
       }
     }
-  }
-}
+  }}
 </script>
 
 <style scoped>

@@ -11,9 +11,10 @@
           </b-col>
           <b-col>
             <p>名前：{{need.item_name}}</p>
-            <p>希望価格：{{need.price | addComma}}</p>
-            <p>期限：{{need.end_at | moment("YYYY/MM/DD")}}</p>
-            <p>備考：{{need.note}}</p>
+            <p>希望価格：{{need.price | addComma}}円</p>
+            <p>個数: {{ need.quantity }}個</p>
+            <p>期限：{{ need.end_at | moment("YYYY/MM/DD") }}</p>
+            <p>備考：{{ need.note }}</p>
             <b-button :to="{name: 'needs-edit', params: {id: need.id}}" class="button" size="sm" v-if="user_id == need.user_id">編集</b-button>
             <b-button :to="{name: 'goods-register', query: { needs_id: need.id } }" class="button" size="sm" v-else>出品</b-button>
           </b-col>
@@ -37,7 +38,7 @@ export default {
   data: function () {
     return {
       need: {},
-      user_id: this.$store.state.user.data.id,
+      user_id: '',
       goods: {},
       path: ''
     }
@@ -47,14 +48,6 @@ export default {
   },
   components: {
     Good, Loading
-  },
-  mounted () {
-    // this.$store.dispatch('getGoodsByNeedsId', { id: this.id });
-    this.$store.dispatch('getGoodsTest');
-    this.$store.dispatch('getNeedById', { id: this.id });
-    this.need = this.$store.state.needs.data
-    this.goods = this.$store.state.goods.dataList
-    this.path = this.need.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
   },
   methods: {
     complete() {
@@ -70,7 +63,16 @@ export default {
         transition: false
       })
     }
-  }
+  },
+  created () {
+    this.$store.dispatch('getGoodsByNeedsId', { id: this.id });
+    this.$store.dispatch('getNeedById', { id: this.id });
+    // this.$store.dispatch('getGoodsTest');
+    this.need = this.$store.state.needs.data;
+    this.user_id = this.$store.state.user.data.id;
+    this.goods = this.$store.state.goods.dataList;
+    this.path = this.need.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
+  },
 }
 </script>
 <style scoped>

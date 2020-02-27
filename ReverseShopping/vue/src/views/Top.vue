@@ -43,8 +43,8 @@ export default {
       if(this.item_name) this.$store.dispatch('searchNeedsByItemName', { item_name: this.item_name});
     },
     getAll() {
-      this.$store.dispatch('getNeedsTest');
-      // this.$store.dispatch('getLatestsNeeds');
+      // this.$store.dispatch('getNeedsTest');
+      this.$store.dispatch('getLatestsNeeds');
     }
   }
 }

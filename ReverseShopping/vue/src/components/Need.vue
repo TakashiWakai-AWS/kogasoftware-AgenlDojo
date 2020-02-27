@@ -4,9 +4,9 @@
       <ul>
         <li>名前: {{ need.item_name }}</li>
         <li>希望価格: {{ need.price | addComma }}円</li>
+        <li>個数: {{ need.quantity }}個</li>
         <li>期限： {{ need.end_at | moment("YYYY/MM/DD") }}</li>
         <li>詳細： {{ need.note }}</li>
-        <li>詳細： {{ need.id }}</li>
         <li><router-link :to="{name: 'needs-detail', params: {id: need.id}}">詳細画面へ</router-link></li>
       </ul>
       <router-link tag="div" class="needs-image mr-0" :to="{name: 'needs-detail', params: {id: need.id}}">
