@@ -12,7 +12,7 @@
           {{ state.text }}
         </div>
         <div class="modal-footer">
-          <b-btn variant="primary" class="mr-2" to="/" @click="ok" v-if="state.transition === true">はい</b-btn>
+          <b-btn variant="primary" class="mr-2" to="/" @click="state.action" v-if="state.transition === true">はい</b-btn>
           <b-btn variant="primary" class="mr-2" @click="state.action" v-else>はい</b-btn>
           <b-btn @click="hide" class="button">いいえ</b-btn>
         </div>
@@ -32,10 +32,6 @@ export default {
     hide() {
       this.$store.commit('hideConfirmModal')
     },
-    ok() {
-      this.state.action
-      this.$store.commit('hideConfirmModal')
-    }
   }
 }
 </script>

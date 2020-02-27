@@ -127,8 +127,6 @@ const needsModule = {
       context.commit('getNeeds', payload);
     },
     async insertNeeds(context, { need, file }) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
       const user_id = context.rootState.user.data.id
       const data = {
         user_id: user_id,
@@ -141,29 +139,30 @@ const needsModule = {
         image_content_type: '',
         note: need.note,
       };
-      reader.onload = function() {
-        const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
-        let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
-        let binary_data = reader.result.split(',')[1];
-        data['image'] = binary_data;
-        data['image_content_type'] = image_content_type;
-        console.log(data);
-        axios.post(url, data)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(err => {
-          console.log({err})
-          context.commit('getError', 'ニーズ登録に失敗しました。');
-        });
-      };
-      reader.onerror = function() {
-        console.log(reader.error);
-      };
+      const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
+      if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function() {
+          let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
+          let binary_data = reader.result.split(',')[1];
+          data['image'] = binary_data;
+          data['image_content_type'] = image_content_type;
+        }
+        reader.onerror = function() {
+          console.log(reader.error);
+        };
+      }
+      await axios.post(url, data)
+      .then(() => {
+        context.dispatch('getLatestsNeeds')
+      })
+      .catch(err => {
+        console.log({err})
+        context.commit('getError', 'ニーズ登録に失敗しました。');
+      });
     },
     async updateNeeds(context, { need, file, needs_id }) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
       const user_id = context.rootState.user.data.id
       const data = {
         user_id: user_id,
@@ -176,25 +175,27 @@ const needsModule = {
         image_content_type: '',
         note: need.note,
       };
-      reader.onload = function() {
-        const url = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/${this.id}`;
-        let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
-        let binary_data = reader.result.split(',')[1];
-        data['image'] = binary_data;
-        data['image_content_type'] = image_content_type;
-        console.log(data);
-        axios.put(`${url}/${needs_id}`, data)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(err => {
-          console.log({err})
-          context.commit('getError', 'ニーズ登録に失敗しました。');
-        });
-      };
-      reader.onerror = function() {
-        console.log(reader.error);
-      };
+      const url = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/${needs_id}`;
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
+            let binary_data = reader.result.split(',')[1];
+            data['image'] = binary_data;
+            data['image_content_type'] = image_content_type;
+        };
+        reader.onerror = function() {
+          console.log(reader.error);
+        };
+      }
+      await axios.put(url, data)
+      .then(() => {
+        context.dispatch('getLatestsNeeds')
+      })
+      .catch(err => {
+        console.log({err})
+        context.commit('getError', 'ニーズ登録に失敗しました。');
+      });
     },
   }
 }

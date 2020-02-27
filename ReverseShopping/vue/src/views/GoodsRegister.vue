@@ -87,6 +87,7 @@ export default {
           image: this.image
         });
       }
+      this.$store.commit('hideConfirmModal')
     },
     register() {
       if (this.$store.state.isLoggedIn) {

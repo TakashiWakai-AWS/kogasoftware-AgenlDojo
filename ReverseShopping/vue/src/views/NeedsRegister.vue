@@ -10,7 +10,7 @@
         <b-form-input v-model="need.price" placeholder="金額" class="mt-3" required></b-form-input>
         <div class="form-group row mt-3">
           <label for="quantity" class="col-sm-2 col-form-label text-left">個数：</label>
-          <b-form-input v-model="need.quantitiy" class="col-sm-5"></b-form-input>
+          <b-form-input v-model="need.quantity" class="col-sm-5"></b-form-input>
         </div>
         <div class="form-group row mt-3 pull-left">
           <label for="start_at" class="col-sm-2 col-form-label text-left">募集期間：</label>
@@ -19,7 +19,7 @@
         </div>
         <div v-if="need.image_path" class="form-group row mt-3">
           <img :src="need.image_path" alt="needs img">
-          <b-form-file v-model="image" class="d-inline" plain></b-form-file>
+          <b-form-file id="image-input" @change="selectedFile" type="file" name="imagefile" class="mt-2"></b-form-file>
         </div>
         <div class="form-group row mt-3" v-else>
           <label for="image_path" class="col-sm-2 col-form-label text-left">画像：</label>
@@ -44,7 +44,12 @@ import Loading from "../components/Loading.vue"
 export default {
   data: function () {
     return {
-      need: {},
+      need: {
+        price: 0,
+        quantity: 1,
+        start_at: moment().format("YYYY-MM-DD"),
+        end_at: moment().add(1, 'months').format("YYYY-MM-DD")
+      },
       uploadFile: null
     }
   },
@@ -80,6 +85,7 @@ export default {
           file: this.uploadFile
         });
       }
+      this.$store.commit('hideConfirmModal')
     },
     register() {
       if (this.$store.state.isLoggedIn) {
