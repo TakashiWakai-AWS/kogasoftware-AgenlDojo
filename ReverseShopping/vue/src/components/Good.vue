@@ -16,14 +16,29 @@
 export default {
   name: 'Good',
   props: {
-    'good': Object,
-    'confirm': Function
+    'good': Object
   },
   data() {
     return {
-      isNeedsUser: this.$store.state.user.id === this.good.needs_id
+      isNeedsUser: this.$store.state.isLoggedIn && (this.$store.state.user.data.id == this.good.needs_user),
+      path: this.good.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
     }
-  }
+  },
+  methods: {
+    purchase() {
+      this.$store.dispatch('purchase', {
+        needs_id: this.good.needs_id,
+        goods_id: this.good.id,
+      })
+    },
+    confirm() {
+      this.$store.commit('showConfirmModal', {
+        text: '購入しますか？',
+        action: this.purchase,
+        transition: false
+      })
+    }
+  },
 }
 </script>
 <style scoped>

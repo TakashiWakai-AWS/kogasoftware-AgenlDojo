@@ -48,7 +48,6 @@ export default {
       this.$store.commit('showConfirmModal', {
         text: 'ログアウトしますか？',
         action: this.signOut,
-        transition: false
       })
     }
   },

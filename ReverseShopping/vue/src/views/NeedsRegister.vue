@@ -5,6 +5,9 @@
       <h1 class="my-5" v-if="id">ニーズ編集画面</h1>
       <h1 class="my-5" v-else>ニーズ登録画面</h1>
 
+      <div v-if="error.length > 0" class="error pt-2">
+        <p v-for="err in error" :key="err.place">{{err.text}}</p>
+      </div>
       <b-form>
         <b-form-input v-model="need.item_name" placeholder="名前" class="mt-3" required></b-form-input>
         <b-form-input v-model="need.price" placeholder="金額" class="mt-3" required></b-form-input>
@@ -32,7 +35,7 @@
           rows="10"
         ></b-form-textarea>
 
-        <b-button class="button my-4 btn-block" @click="register">登録</b-button>
+        <b-button class="button my-4 btn-block" @click="check">登録</b-button>
         <b-button class="red-button my-4 btn-block" @click="deleteConfirm" v-if="id">削除</b-button>
       </b-form>
     </div>
@@ -50,7 +53,8 @@ export default {
         start_at: moment().format("YYYY-MM-DD"),
         end_at: moment().add(1, 'months').format("YYYY-MM-DD")
       },
-      uploadFile: null
+      uploadFile: null,
+      error: [],
     }
   },
   props: {
@@ -88,14 +92,10 @@ export default {
       this.$store.commit('hideConfirmModal')
     },
     register() {
-      if (this.$store.state.isLoggedIn) {
-        this.$store.commit('showConfirmModal', {
-          text: '登録しますか？',
-          action: this.submit,
-        })
-      } else {
-        this.$store.commit('notLogedInError');
-      }
+      this.$store.commit('showConfirmModal', {
+        text: '登録しますか？',
+        action: this.submit,
+      })
     },
     deleteConfirm() {
       if (this.$store.state.isLoggedIn) {
@@ -106,6 +106,34 @@ export default {
       } else {
         this.$store.commit('notLogedInError');
       }
+    },
+    check() {
+      if (!this.$store.state.isLoggedIn) return this.$store.commit('notLogedInError');
+      this.error = []
+      if (!this.need.item_name) {
+        this.error.push({ place: 'name', text: '商品名を入力してください' })
+      }
+      if (isNaN(this.need.price)) {
+        this.error.push({ place: 'price', text: '金額を半角数字で入力してください' })
+      }
+      if (this.error.length > 0) {
+        const duration = 250;  // 移動速度（1秒で終了）
+        const interval = 25;    // 0.025秒ごとに移動
+        const step = -window.scrollY / Math.ceil(duration / interval); // 1回に移動する距離
+        const timer = setInterval(() => {
+
+            window.scrollBy(0, step);   // スクロール位置を移動
+
+            if(window.scrollY <= 0) {
+
+                clearInterval(timer);
+
+            }
+
+        }, interval);
+        return
+      }
+      this.register()
     }
   }}
 </script>
@@ -114,5 +142,8 @@ export default {
 img {
   width: 300px;
   height: 300px;
+}
+.error {
+  background-color: rgba(215,75,75,0.2);
 }
 </style>

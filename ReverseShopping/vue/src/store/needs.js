@@ -196,7 +196,7 @@ const needsModule = {
         console.log({err})
         context.commit('getError', 'ニーズ登録に失敗しました。');
       });
-    },
+    }
   }
 }
 

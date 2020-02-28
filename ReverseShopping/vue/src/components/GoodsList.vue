@@ -2,7 +2,7 @@
   <div class="good w-75">
     <div class="goods-info d-flex justify-content-between">
       <ul>
-        <li>希望価格: {{ good.price | addComma }}円</li>
+        <li>状態： {{ good.item_status | itemStatus }}</li>
         <li>詳細： {{ good.note }}</li>
         <li><router-link :to="{name: 'goods-detail', params: {id: good.id}}">詳細画面へ</router-link></li>
       </ul>

@@ -22,6 +22,11 @@
           </b-col>
         </b-row>
       </b-container>
+      <div v-show="isNeedsUser && user_id === good.user_id && good.deal_status > 0">
+        <div>
+          <h2>買取評価</h2>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -42,24 +47,24 @@ export default {
   },
   components: { Loading },
   methods: {
-    complete() {
-      this.$store.commit('hideConfirmModal')
-      this.$store.commit('showCompleteModal', {
-        text: '購入が完了しました。'
+    purchase() {
+      this.$store.dispatch('purchase', {
+        needs_id: this.good.needs_id,
+        goods_id: this.good.id,
       })
     },
     confirm() {
       this.$store.commit('showConfirmModal', {
         text: '購入しますか？',
-        action: this.complete,
+        action: this.purchase,
         transition: false
       })
     }
   },
-  mounted () {
+  created () {
     this.$store.dispatch('getGoodById', { id: this.id });
     this.good = this.$store.state.goods.data
-    this.isNeedsUser = this.$store.state.user.id === this.good.needs_id
+    this.isNeedsUser = this.$store.state.isLoggedIn && (this.$store.state.user.data.id == this.good.needs_user)
   }
 }
 </script>
