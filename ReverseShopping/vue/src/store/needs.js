@@ -128,6 +128,30 @@ const needsModule = {
     },
     async insertNeeds(context, { need, file }) {
       const user_id = context.rootState.user.data.id
+      
+      const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
+
+      const alter_image_to_base64 = () => {
+        if (!file) {
+          return { image_content_type: '', binary_data: '' }
+        }
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function(event) {
+            console.log(event);
+            const image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
+            const binary_data = reader.result.split(',')[1];
+            resolve({ image_content_type, binary_data });
+          }
+          reader.onerror = function() {
+            console.log(reader.error);
+          };
+        })
+      };
+
+      const { image_content_type, binary_data } = await alter_image_to_base64();
+      
       const data = {
         user_id: user_id,
         item_name: need.item_name,
@@ -135,32 +159,11 @@ const needsModule = {
         start_at: need.start_at,
         end_at: need.end_at,
         quantity: need.quantity,
-        image: '',
-        image_content_type: '',
+        image: binary_data,
+        image_content_type: image_content_type,
         note: need.note,
-      };
-      const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
-
-      const alter_image_to_base64 = function() {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            console.log(event);
-            let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
-            let binary_data = reader.result.split(',')[1];
-            data['image'] = binary_data;
-            data['image_content_type'] = image_content_type;
-            resolve(data);
-          }
-          reader.readAsDataURL(file);
-          reader.onerror = function() {
-            console.log(reader.error);
-          };
-        })
-      };
-      if (file) {
-        await alter_image_to_base64();
       }
+
       await axios.post(url, data)
       .then((result) => {
         console.log(result);
