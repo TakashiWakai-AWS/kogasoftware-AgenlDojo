@@ -50,10 +50,11 @@ export default {
     AmplifyEventBus.$on('authState', async  info => {
       if (info === 'signedIn') {
         this.$store.dispatch('getUserInfoFromCognito', { isLoginProcess: true });
-        if (this.$route.path !== '/') {
-          this.$router.push('/')
-        }
-      } 
+      }
+      const processToLogin = ['signUp', 'confirmSignUp', 'signIn'] 
+      if (processToLogin.every(item => item !== info) && this.$route.path !== '/') {
+        this.$router.push('/')
+      }
     });
   },
 };
