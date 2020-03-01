@@ -1,7 +1,7 @@
-import { Auth } from 'aws-amplify'
-import { Logger } from 'aws-amplify';
+import axios from 'axios'
+import { Auth, Logger } from 'aws-amplify'
 
-const logger = new Logger('foo');
+const logger = new Logger('user', 'ERROR');
 
 const userModule = {
   state: {
@@ -12,41 +12,24 @@ const userModule = {
       'address': '',
       'tel': '',
       'email': '',
-      'settlement_info': '*************',
+      'settlementInfo': '*************',
     },
-    isLoggedIn : false,
-    // data: {
-    //   'id': '1',
-    //   'name': 'hoge',
-    //   'nickname': 'fuga',
-    //   'address': '東京都台東区上野1-17-6',
-    //   'tel': '03-3833-0733',
-    //   'email': 'asdjdahaj@aksj.jp',
-    //   'settlement_info': '*************',
-    // },
   },
   mutations: {
-    signIn(state) {
-      state.isLoggedIn = true;
-    },
-    notSignIn(state) {
-      state.isLoggedIn = false;
-    },
-    signOut(state) {
-      state.isLoggedIn = false;
-    },
     getUserInfo(state, payload) {
       const userInfo = payload
       state.data = {
-        'id': '1',
-        'name': userInfo.username,
-        'nickname': '未登録',
+        'id': '',
+        'name': userInfo.attributes.name,
+        'nickname': userInfo.attributes.nickname,
         'address': userInfo.attributes.address,
         'tel': userInfo.attributes.phone_number,
         'email': userInfo.attributes.email,
-        'settlement_info': '*************',
+        'settlementInfo': userInfo.attributes['custom:settlement_info'],
       }
-      state.loading = false
+    },
+    getUserId(state, userId) {
+      state.data.id = userId
     },
     startUserLoading(state) {
       state.loading = true
@@ -54,22 +37,52 @@ const userModule = {
     clearUser(state) {
       state.data = {}
     },
+    endUserLoading(state) {
+      state.loading = false
+    },
   },
   actions: {
-    async getUserInfoFromCognito(context) {
+    async getUserInfoFromCognito(context, { isLoginProcess } = { isLoginProcess: false }) {
       context.commit('startUserLoading')
+      // Auth.currentAuthenticatedUser()でユーザ情報を取得する。
       const cognitoUser = await Auth.currentAuthenticatedUser()
-        .catch(() => {
-          context.commit('notSignIn');
+        // 取得できなければ認証ステータスをfalseに設定する
+        .catch(err => {
+          logger.error('currentAuthenticatedUser error', err)
+          // isLoginProcess ?
+            // context.commit('getError', 'ログインに失敗しました。'); :
+            // context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+          context.commit('cancelSignIn');
         })
-      logger.debug(cognitoUser);
       if (!cognitoUser) {
-        context.commit('notSignIn');
+        logger.debug('not authenticated')
+        if (isLoginProcess) {
+          // context.commit('getError', 'ログインに失敗しました。');
+        }
+        context.commit('cancelSignIn');
         return
       }
       context.commit('signIn');
+
       context.commit('getUserInfo', cognitoUser);
-    }
+
+      const { id } = await getUserIdByEmail(cognitoUser.attributes.email)
+      context.commit('getUserId', id);
+
+      context.commit('endUserLoading')
+
+      // DBのUserテーブルのidを取得する処理
+      async function getUserIdByEmail(email) {
+        const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/user/id';
+        return axios.post(url, { mail: email })
+        .then(response => response.data[0])
+        .catch(err => {
+          logger.error('getUserIdByEmail error', err);
+          // context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+          context.commit('cancelSignIn');
+        })
+      }
+    },
   }
 }
 

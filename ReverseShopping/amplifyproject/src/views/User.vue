@@ -5,7 +5,7 @@
         && this.$store.state.goods.loading && this.$store.state.user.loading"/>
     <div v-else>
       <h2>ユーザー情報</h2>
-      <img class="img-thumbnail rounded mt-4" :src="userData.image">
+      <!-- <img class="img-thumbnail rounded mt-4" :src="userData.image"> -->
       <table class="table mx-auto mt-4" style="width: 50%">
         <tr>
           <th>氏名</th>
@@ -21,7 +21,7 @@
         </tr>
         <tr>
           <th>TEL</th>
-          <td>{{ userData.tel }}</td>
+          <td>{{ maskedPhoneNumber }}</td>
         </tr>
         <tr>
           <th>メールアドレス</th>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
           <th>決済情報</th>
-          <td>{{ userData.settlement_info }}</td>
+          <td>{{ maskedsettlementInfo }}</td>
         </tr>
       </table>
       <div v-show="dealingNeeds.length > 0">
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
 import NeedsList from "../components/NeedsList.vue"
 import GoodsList from "../components/GoodsList.vue"
 import Loading from "../components/Loading.vue"
@@ -70,6 +71,22 @@ export default {
       dealingNeeds: [],
       dealingGoods: [],
     }
+  },
+  computed: {
+    ...mapState({
+      userData: state => state.user.data,
+      goods: state => state.goods.dataList
+    }),
+    maskedPhoneNumber: function () {
+      return this.userData.tel.slice(3).replace(/([0-9]{3})([0-9]+)([0-9]{4})/,
+        (match, p1, p2, p3) => `${p1}${p2.replace(/./g, '*')}${p3}`
+      )
+    },
+    maskedsettlementInfo: function () {
+      return this.userData.settlementInfo.replace(/([0-9]+)([0-9]{1})/,
+        (match, p1, p2) => `${p1.replace(/./g, '*')}${p2}`
+      )
+    },
   },
   created() {
     this.$store.dispatch('getNeedsByUserId');

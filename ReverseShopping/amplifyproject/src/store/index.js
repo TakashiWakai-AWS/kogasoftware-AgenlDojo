@@ -10,20 +10,20 @@ import errorModalModule from './errorModal.js'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  // state: {
-  //   isLoggedIn : false,
-  // },
-  // mutations: {
-  //   signIn(state) {
-  //     state.isLoggedIn = true;
-  //   },
-  //   notSignIn(state) {
-  //     state.isLoggedIn = false;
-  //   },
-  //   signOut(state) {
-  //     state.isLoggedIn = false;
-  //   },
-  // },
+  state: {
+    isLoggedIn : false,
+  },
+  mutations: {
+    signIn(state) {
+      state.isLoggedIn = true;
+    },
+    cancelSignIn(state) {
+      state.isLoggedIn = false;
+    },
+    signOut(state) {
+      state.isLoggedIn = false;
+    },
+  },
   modules: {
     needs: needsModule,
     goods: goodsModule,
