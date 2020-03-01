@@ -80,7 +80,9 @@ const userModule = {
       // DBのUserテーブルのidを取得する処理
       async function getUserIdByEmail(email) {
         const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/user/id';
-        return axios.post(url, { mail: email })
+        return axios.post(url, { mail: email }, {
+          headers: { 'Authorization': cognitoUser.signInUserSession.idToken.jwtToken }
+        })
         .then(response => response.data[0])
         .catch(err => {
           logger.error('getUserIdByEmail error', err);
