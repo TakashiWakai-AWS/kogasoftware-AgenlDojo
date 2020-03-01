@@ -3,18 +3,15 @@
     <b-navbar id="header" toggleable="lg" type="dark" variant="#333">
       <b-navbar-brand to="/">Reverse Shopping</b-navbar-brand>
         <b-navbar-nav class="ml-auto">
-          <template v-if="$store.state.user.isLoggedIn">
+          <template v-if="isLoggedIn">
             <div id="user-link-wrapper" class="mr-4">
-                ようこそ<b-link id="user-link" to="/user">
-                          {{ $store.state.user.data.name }}
-                        </b-link>さん
+                ようこそ<b-link id="user-link" to="/user">{{ nickname }}</b-link>さん
             </div>
-            <!-- <b-button
+            <b-button
               v-b-modal.modal-logout
               size="sm"
               class="button my-2 mr-2 my-sm-0"
-            >ログアウト</b-button> -->
-            <amplify-sign-out v-b-modal.modal-logout/>
+            >ログアウト</b-button>
           </template>
           <template v-else>
             <b-button  to="/sign-in" size="sm" class="button my-2 mr-2 my-sm-0">
@@ -31,15 +28,27 @@
 </template>
 
 <script>
+import { Auth, Logger } from 'aws-amplify'
+import { mapState } from 'vuex'
 import ConfirmModal from '../components/ConfirmModal.vue'
+const logger = new Logger('Header'/*, 'ERROR'*/);
 
 export default {
   name: 'Header',
   async beforeCreate() {
     this.$store.dispatch('getUserInfoFromCognito');
   },
+  computed: mapState({
+    isLoggedIn: 'isLoggedIn',
+    nickname: state => state.user.data.nickname
+  }),
   methods: {
     signOut() {
+      Auth.signOut()
+        .catch((err) => {
+          logger.error('sign out error', err);
+          // this.$store.commit('getError', 'ログアウトに失敗しました。');
+        });
       this.$store.commit('signOut');
       this.$bvModal.hide('modal-logout');
     }
