@@ -71,12 +71,14 @@ export default {
   components: { Loading },
   created () {
     if(this.id) {
-      this.$store.dispatch('getGoodById', { id: this.id });
-      this.good = this.$store.state.goods.data
+      this.$store.dispatch('getGoodById', { id: this.id }).then(() => {
+        this.good = this.$store.state.goods.data
+      });
     }
-    this.$store.dispatch('getNeedById', { id: this.$route.query.needs_id });
-    this.need = this.$store.state.needs.data
-    this.path = this.need.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
+    this.$store.dispatch('getNeedById', { id: this.$route.query.needs_id }).then(() => {
+      this.need = this.$store.state.needs.data
+      this.path = this.need.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
+    });
   },
   methods: {
     selectedFile() {
@@ -112,13 +114,18 @@ export default {
       if (this.$store.state.isLoggedIn) {
         this.$store.commit('showConfirmModal', {
           text: '削除しますか？',
-          action: this.submit,
+          action: this.deleted,
         })
       } else {
         this.$store.commit('notLogedInError');
       }
     },
-
+    deleted() {
+      this.$store.dispatch('deleteGood', {
+        id: this.good.id,
+      })
+      this.$store.commit('hideConfirmModal')
+    },
     check() {
       if (!this.$store.state.isLoggedIn) return this.$store.commit('notLogedInError');
       this.error = []

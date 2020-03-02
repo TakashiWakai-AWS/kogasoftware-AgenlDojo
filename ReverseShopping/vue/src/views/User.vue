@@ -1,9 +1,7 @@
 <template>
   <div class="user">
     <Loading
-      v-if="this.$store.state.needs.loading
-        && this.$store.state.goods.loading
-          && this.$store.state.user.loading"/>
+      v-if="loading"/>
     <div v-else>
       <h2>ユーザー情報</h2>
       <img class="img-thumbnail rounded mt-4" :src="userData.image">
@@ -33,6 +31,14 @@
           <td>{{ userData.settlement_info }}</td>
         </tr>
       </table>
+      <div v-show="dealingNeeds.length > 0">
+        <h2>取引中ニーズ一覧</h2>
+        <Need v-for="need in dealingNeeds" :key="need.id" :need="need"></Need>
+      </div>
+      <div v-show="dealingGoods.length > 0">
+        <h2>取引中出品一覧</h2>
+        <GoodsList v-for="good in dealingGoods" :key="good.id" :good="good"/>
+      </div>
       <h2>募集中一覧</h2>
       <NeedsList></NeedsList>
       <h2>出品中一覧</h2>
@@ -48,21 +54,34 @@
 import NeedsList from "../components/NeedsList.vue"
 import GoodsList from "../components/GoodsList.vue"
 import Loading from "../components/Loading.vue"
+import Need from "../components/Need.vue"
 
 export default {
   name: 'User',
-  components: { NeedsList, GoodsList, Loading },
+  components: { NeedsList, GoodsList, Loading, Need },
   data() {
     return {
       userData: {},
-      goods: {}
+      goods: {},
+      dealingNeeds: [],
+      dealingGoods: [],
+      loading: false
     }
   },
   created() {
     this.$store.dispatch('getNeedsByUserId');
-    this.$store.dispatch('getGoodsByUserId');
-    this.userData = this.$store.state.user.data,
-    this.goods = this.$store.state.goods.dataList;
+    this.$store.dispatch('getGoodsByUserId').then(() => {
+      this.goods = this.$store.state.goods.dataList;
+    });
+    this.$store.dispatch('getDealingGoods').then(() => {
+      this.dealingGoods = this.$store.state.goods.dealingDataList;
+    });
+    this.$store.dispatch('getDealingNeeds').then(() => {
+      this.dealingNeeds = this.$store.state.needs.dealingDataList;
+    });
+    this.userData = this.$store.state.user.data
+    this.loading = this.$store.state.needs.loading && this.$store.state.needs.dealdataLoading
+      && this.$store.state.goods.loading && this.$store.state.user.loading
   }
 }
 </script>

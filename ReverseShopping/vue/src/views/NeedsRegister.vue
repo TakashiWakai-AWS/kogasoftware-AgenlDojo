@@ -63,10 +63,11 @@ export default {
   components: { Loading },
   created () {
     if(this.id) {
-      this.$store.dispatch('getNeedById', { id: this.id });
-      this.need = this.$store.state.needs.data
-      this.need.start_at = moment(Date(this.need.start_at)).format("YYYY-MM-DD");
-      this.need.end_at = moment(Date(this.need.end_at)).format("YYYY-MM-DD");
+      this.$store.dispatch('getNeedById', { id: this.id }).then(() => {
+        this.need = this.$store.state.needs.data
+        this.need.start_at = moment(Date(this.need.start_at)).format("YYYY-MM-DD");
+        this.need.end_at = moment(Date(this.need.end_at)).format("YYYY-MM-DD");
+      });
     }
   },
   methods: {
@@ -101,11 +102,17 @@ export default {
       if (this.$store.state.isLoggedIn) {
         this.$store.commit('showConfirmModal', {
           text: '削除しますか？',
-          action: this.submit,
+          action: this.deleted,
         })
       } else {
         this.$store.commit('notLogedInError');
       }
+    },
+    deleted() {
+      this.$store.dispatch('deleteNeed', {
+        id: this.need.id,
+      })
+      this.$store.commit('hideConfirmModal')
     },
     check() {
       if (!this.$store.state.isLoggedIn) return this.$store.commit('notLogedInError');

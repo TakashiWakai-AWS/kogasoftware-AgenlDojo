@@ -4,7 +4,7 @@
       <router-link tag="div" class="mr-0" :to="{name: 'goods-detail', params: {id: good.id}}"><img :src="good.image_path" alt="写真"></router-link>
       <div class="detail">
         <p class="mt-3">状態：{{ good.item_status | itemStatus }}</p>
-        <b-button size="sm" class="button d-inline mr-3" @click="confirm" v-if="isNeedsUser">
+        <b-button size="sm" class="button d-inline mr-3" @click="confirm" v-if="isNeedsUser && good.deal_status === 0">
           購入
         </b-button>
         <router-link class="d-inline" :to="{name: 'goods-detail', params: {id: good.id}}">詳細</router-link>

@@ -22,7 +22,7 @@ const userModule = {
       context.commit('startUserLoading')
       const payload = {
         data: {
-          'id': '1',
+          'id': 2,
           'name': 'hoge',
           'nickname': 'fuga',
           'address': '東京都台東区上野1-17-6',
