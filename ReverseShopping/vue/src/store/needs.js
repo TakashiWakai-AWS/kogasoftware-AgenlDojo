@@ -173,23 +173,27 @@ const needsModule = {
         note: need.note,
       };
       const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
-      const alter_image_to_base64 = () => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function() {
-          let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
-          let binary_data = reader.result.split(',')[1];
-          data['image'] = binary_data;
-          data['image_content_type'] = image_content_type;
-        }
-        reader.onerror = function() {
-          console.log(reader.error);
-        };
-      }
+      const alter_image_to_base64 = function() {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            console.log(event);
+            let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
+            let binary_data = reader.result.split(',')[1];
+            data['image'] = binary_data;
+            data['image_content_type'] = image_content_type;
+            resolve(data);
+          }
+          reader.readAsDataURL(file);
+          reader.onerror = function() {
+            console.log(reader.error);
+          };
+        })
+      };
       if (file) await alter_image_to_base64();
       await axios.post(url, data)
-      .then(() => {
-        console.log({data})
+      .then((result) => {
+        console.log(result);
         context.dispatch('getLatestsNeeds')
       })
       .catch(err => {
@@ -212,17 +216,21 @@ const needsModule = {
       };
       const url = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/${needs_id}`;
       const alter_image_to_base64 = () => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function() {
-          let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
-          let binary_data = reader.result.split(',')[1];
-          data['image'] = binary_data;
-          data['image_content_type'] = image_content_type;
-        }
-        reader.onerror = function() {
-          console.log(reader.error);
-        };
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            console.log(event);
+            let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
+            let binary_data = reader.result.split(',')[1];
+            data['image'] = binary_data;
+            data['image_content_type'] = image_content_type;
+            resolve(data);
+          }
+          reader.readAsDataURL(file);
+          reader.onerror = function() {
+            console.log(reader.error);
+          };
+        })
       }
       if (file) await alter_image_to_base64();
       await axios.put(url, data)
