@@ -1,7 +1,8 @@
 <template>
   <div class="user">
     <Loading
-      v-if="loading"/>
+      v-if="this.$store.state.needs.loading && this.$store.state.needs.dealdataLoading
+        && this.$store.state.goods.loading && this.$store.state.user.loading"/>
     <div v-else>
       <h2>ユーザー情報</h2>
       <img class="img-thumbnail rounded mt-4" :src="userData.image">
@@ -65,7 +66,6 @@ export default {
       goods: {},
       dealingNeeds: [],
       dealingGoods: [],
-      loading: false
     }
   },
   created() {
@@ -80,8 +80,6 @@ export default {
       this.dealingNeeds = this.$store.state.needs.dealingDataList;
     });
     this.userData = this.$store.state.user.data
-    this.loading = this.$store.state.needs.loading && this.$store.state.needs.dealdataLoading
-      && this.$store.state.goods.loading && this.$store.state.user.loading
   }
 }
 </script>

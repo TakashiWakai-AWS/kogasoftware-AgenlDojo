@@ -100,7 +100,6 @@ const needsModule = {
         data: {}
       }
       let need = context.rootState.needs.dataList.find((c) => c.id === id)
-      if (!need && context.rootState.needs.data.id === id) need = context.rootState.needs.data
       // const need = false
       if (need) {
         payload.data = need;
@@ -254,8 +253,7 @@ const needsModule = {
         context.commit('getError', 'ニーズの削除に失敗しました。');
       });
     },
-    async insertNeedsEvaluation(context, { goods_id, evaluation }) {
-    // async insertNeedsEvaluation(context, { goods_id, evaluation, needs_id }) {
+    async insertNeedsEvaluation(context, { goods_id, evaluation, needs_id }) {
       const user_id = context.rootState.user.data.id
       const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/evaluation/needs'
       const data = {
@@ -266,25 +264,25 @@ const needsModule = {
       await axios.post(url, data)
       .then(() => {
         console.log('insert needs evaluation')
-        // const needsUrl = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/status/${needs_id}`;
-        // const goodsUrl = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods/status/${goods_id}`;
-        // const statusData = { deal_status: 2 }
-        // axios.put(needsUrl, statusData)
-        // .then((response) => {
-        //   if (response.data.errorMessage) throw Error(response.data.errorMessage)
-        //   console.log('needs status to 2')
-        //   axios.put(goodsUrl, statusData)
-        //   .then((response) => {
-        //     console.log('goods status to 2')
-        //   })
-        //   .catch(err => {
-        //     console.log('good status error')
-        //     throw Error(err)
-        //   });
-        // }).catch(err => {
-        //   console.log('needs status error')
-        //   throw Error(err)
-        // })
+        const needsUrl = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/status/${needs_id}`;
+        const goodsUrl = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods/status/${goods_id}`;
+        const statusData = { deal_status: 2 }
+        axios.put(needsUrl, statusData)
+        .then((response) => {
+          if (response.data.errorMessage) throw Error(response.data.errorMessage)
+          console.log('needs status to 2')
+          axios.put(goodsUrl, statusData)
+          .then(() => {
+            console.log('goods status to 2')
+          })
+          .catch(err => {
+            console.log('good status error')
+            throw Error(err)
+          });
+        }).catch(err => {
+          console.log('needs status error')
+          throw Error(err)
+        })
       })
       .catch(err => {
         console.log({err})

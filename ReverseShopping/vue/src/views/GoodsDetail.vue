@@ -22,7 +22,7 @@
           </b-col>
         </b-row>
       </b-container>
-      <div v-show="isGoodsUser && good.deal_status > 0" class="mx-auto mt-5">
+      <div v-show="(isGoodsUser || isNeedsUser) && good.deal_status > 0" class="mx-auto mt-5">
         <p class="d-inline">ユーザー評価</p>
         <div>
           <star-rating
@@ -33,7 +33,7 @@
             class="my-3"
             :read-only="good.deal_status == 2"/>
         </div>
-        <b-button class="button" size="sm" @click="evaluate">評価する</b-button>
+        <b-button class="button mb-3" size="sm" @click="evaluate">評価する</b-button>
       </div>
     </div>
   </div>
