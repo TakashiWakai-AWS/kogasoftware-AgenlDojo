@@ -3,20 +3,23 @@
     <Loading v-if="this.$store.state.needs.loading"/>
     <div v-else>
       <b-form>
-        <b-form-input
-          id="search"
-          class="w-50 mx-auto"
-          placeholder="ニーズを検索してください"
-          v-model="item_name"
-        ></b-form-input>
-        <b-button class="button mt-4" size="sm" @click="search">検索</b-button>
+        <b-input-group class="w-50 mx-auto">
+          <b-form-input
+            id="search"
+            placeholder="ニーズを検索してください"
+            v-model="item_name"
+          ></b-form-input>
+          <b-button class="button" size="sm" @click="search" :disabled="!item_name">
+            <b-icon icon="search" aria-hidden="true"></b-icon>
+          </b-button>
+        </b-input-group>
         <b-button
           to="/needs-register"
           class="red-button mt-4 ml-2"
           size="sm"
         >ニーズを登録する</b-button>
       </b-form>
-      <b-button class="button mt-4" size="sm" @click="getAll">検索クリア</b-button>
+      <!-- <b-button class="button mt-4" size="sm" @click="getAll">検索クリア</b-button> -->
       <h2>ニーズ一覧</h2>
       <NeedsList></NeedsList>
     </div>

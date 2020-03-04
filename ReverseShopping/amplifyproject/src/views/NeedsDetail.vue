@@ -15,8 +15,8 @@
             <p>個数: {{ need.quantity }}個</p>
             <p>期限：{{ need.end_at | moment("YYYY/MM/DD") }}</p>
             <p>備考：{{ need.note }}</p>
-            <b-button :to="{name: 'needs-edit', params: {id: need.id}}" class="button" size="sm" v-if="isNeedsUser && need.deal_status === 0">編集</b-button>
-            <b-button :to="{name: 'goods-register', query: { needs_id: need.id} }" class="button" size="sm" v-if="!isNeedsUser && !isGoodsUser">出品</b-button>
+            <b-button :to="{name: 'needs-edit', params: {id: need.id}}" class="button" size="sm" v-if="editable">編集</b-button>
+            <b-button :to="{name: 'goods-register', query: { needs_id: need.id} }" class="button" size="sm" v-if="salable">出品</b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -42,9 +42,10 @@ export default {
       user_id: this.$store.state.user.data.id,
       goods: {},
       path: '',
-      isGoodsUser: false,
       isNeedsUser: false,
-      evaluation: 0
+      evaluation: 0,
+      editable: false,
+      salable: false,
     }
   },
   props: {
@@ -54,15 +55,17 @@ export default {
     Good, Loading
   },
   created () {
-    this.$store.dispatch('getGoodsByNeedsId', { id: this.id }).then(() => {
-      this.goods = this.$store.state.goods.dataList;
-      this.isGoodsUser = this.$store.state.isLoggedIn && (this.goods.filter(g => g.user_id == this.user_id).length > 0 ? true : false)
-    });
     this.$store.dispatch('getNeedById', { id: this.id }).then(() => {
       this.need = this.$store.state.needs.data;
       this.path = this.need.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
       this.isNeedsUser = this.$store.state.isLoggedIn && (this.user_id == this.need.user_id)
+      this.editable = this.isNeedsUser && this.need.deal_status === 0
     });
+    this.$store.dispatch('getGoodsByNeedsId', { id: this.id }).then(() => {
+      this.goods = this.$store.state.goods.dataList;
+      const isGoodsUser = this.$store.state.isLoggedIn && (this.goods.filter(g => g.user_id == this.user_id).length > 0 ? true : false)
+      this.salable = !isGoodsUser && !this.isNeedsUser && this.need.deal_status === 0
+    })
     // this.$store.dispatch('getGoodsTest');
   },
 }

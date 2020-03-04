@@ -9,7 +9,6 @@ import NeedsRegister from '../views/NeedsRegister.vue'
 import NeedsDetail from '../views/NeedsDetail.vue'
 import GoodsDetail from '../views/GoodsDetail.vue'
 import GoodsRegister from '../views/GoodsRegister.vue'
-// import store from '../store/index.js'
 
 Vue.use(VueRouter)
 
@@ -38,13 +37,6 @@ const routes = [
     path: '/user',
     name: 'user',
     component: User,
-    // beforeEnter: (to, from, next) => { // [2]
-    //   store.dispatch('getNeedsByUserId');
-    //   store.dispatch('getGoodsByUserId');
-    //   store.dispatch('getDealingGoods');
-    //   store.dispatch('getDealingNeeds');
-    //   next();
-    // },
   },
   {
     path: '/needs-register',
