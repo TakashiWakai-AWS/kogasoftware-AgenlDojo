@@ -56,6 +56,7 @@ import NeedsList from "../components/NeedsList.vue"
 import GoodsList from "../components/GoodsList.vue"
 import Loading from "../components/Loading.vue"
 import Need from "../components/Need.vue"
+import { mapState } from "vuex"
 
 export default {
   name: 'User',
@@ -65,7 +66,6 @@ export default {
   },
   data() {
     return {
-      userData: {},
       goods: {},
       dealingNeeds: [],
       dealingGoods: [],
@@ -82,6 +82,9 @@ export default {
         (match, p1, p2) => `${p1.replace(/./g, '*')}${p2}`
       )
     },
+    ...mapState({
+      userData: state => state.user.data,
+    })
   },
   created() {
     this.$store.dispatch('getNeedsByUserId');
@@ -94,7 +97,6 @@ export default {
     this.$store.dispatch('getDealingNeeds').then(() => {
       this.dealingNeeds = this.$store.state.needs.dealingDataList;
     });
-    this.userData = this.$store.state.user.data
   }
 }
 </script>

@@ -33,20 +33,31 @@
 <script>
 import Good from "../components/Good.vue"
 import Loading from "../components/Loading.vue"
+import { mapState } from "vuex"
 
 export default {
   name: 'NeedsDetail',
   data: function () {
     return {
       need: {},
-      user_id: this.$store.state.user.data.id,
       goods: {},
       path: '',
-      isNeedsUser: false,
-      evaluation: 0,
-      editable: false,
-      salable: false,
     }
+  },
+  computed: {
+    ...mapState({
+      user_id: state => state.user.data.id,
+      isNeedsUser(state) {
+        return state.isLoggedIn && (this.user_id == this.need.user_id)
+      },
+      editable(state) {
+        return this.isNeedsUser && state.needs.data.deal_status === 0
+      },
+      salable(state) {
+        const isGoodsUser = state.isLoggedIn && (state.goods.dataList.filter(g => g.user_id == this.user_id).length > 0 ? true : false)
+        return !isGoodsUser && !this.isNeedsUser && state.needs.data.deal_status === 0
+      },
+    }),
   },
   props: {
     'id': [String, Number]
@@ -58,13 +69,9 @@ export default {
     this.$store.dispatch('getNeedById', { id: this.id }).then(() => {
       this.need = this.$store.state.needs.data;
       this.path = this.need.image_path || 'https://kogasoft-reverse-shopping-assets.s3-ap-northeast-1.amazonaws.com/no_Image.jpg'
-      this.isNeedsUser = this.$store.state.isLoggedIn && (this.user_id == this.need.user_id)
-      this.editable = this.isNeedsUser && this.need.deal_status === 0
     });
     this.$store.dispatch('getGoodsByNeedsId', { id: this.id }).then(() => {
       this.goods = this.$store.state.goods.dataList;
-      const isGoodsUser = this.$store.state.isLoggedIn && (this.goods.filter(g => g.user_id == this.user_id).length > 0 ? true : false)
-      this.salable = !isGoodsUser && !this.isNeedsUser && this.need.deal_status === 0
     })
     // this.$store.dispatch('getGoodsTest');
   },

@@ -32,6 +32,7 @@
               :show-rating="false"
               :star-size=30
               inline
+              :read-only="(isNeedsUser && good.goods_evaluation) || (isGoodsUser && good.needs_evaluation)"
               class="my-3"/>
           </div>
           <b-button class="button mb-3" size="sm" @click="evaluate" :disabled="!evaluable">評価する</b-button>
@@ -43,18 +44,30 @@
 <script>
 import Loading from "../components/Loading.vue"
 import StarRating from 'vue-star-rating'
+import { mapState } from "vuex"
 
 export default {
   name: 'GoodsDetail',
   data: function () {
     return {
       good: {},
-      user_id: this.$store.state.user.data.id,
-      isNeedsUser: false,
-      isGoodsUser: false,
       evaluation: 0,
-      evaluable: false
     }
+  },
+  computed: {
+    ...mapState({
+      user_id: state => state.user.data.id,
+      isNeedsUser(state) {
+        return state.isLoggedIn && (this.user_id == state.goods.data.needs_user)
+      },
+      isGoodsUser(state) {
+        return state.isLoggedIn && (this.user_id == state.goods.data.user_id)
+      },
+      evaluable(state) {
+        if (this.isNeedsUser) return !state.goods.data.goods_evaluations_id
+        if (this.isGoodsUser) return !state.goods.data.needs_evaluations_id
+      },
+    }),
   },
   props: {
     'id': [String, Number]
@@ -93,10 +106,8 @@ export default {
   created () {
     this.$store.dispatch('getGoodById', { id: this.id }).then(() => {
       this.good = this.$store.state.goods.data
-      this.isNeedsUser = this.$store.state.isLoggedIn && (this.$store.state.user.data.id == this.good.needs_user)
-      this.isGoodsUser = this.$store.state.isLoggedIn && (this.user_id == this.good.user_id)
-      if (this.isNeedsUser) this.evaluable = !this.good.goods_evaluations_id
-      if (this.isGoodsUser) this.evaluable = !this.good.needs_evaluations_id
+      if (this.isNeedsUser) this.evaluation = this.good.goods_evaluation
+      if (this.isGoodsUser) this.evaluation = this.good.needs_evaluation
     });
   }
 }

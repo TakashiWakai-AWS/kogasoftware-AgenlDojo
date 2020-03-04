@@ -68,7 +68,7 @@ const needsModule = {
       const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/latest';
       await axios.get(url)
       .then(response => {
-        if (response.data.errorMessage) throw Error()
+        if (response.data.errorMessage) throw Error(response.data.errorMessage)
         payload.dataList = response.data;
       }).catch(
         function(err) {
@@ -86,6 +86,7 @@ const needsModule = {
       const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
       await axios.get(url, { params })
       .then(response => {
+        if (response.data.errorMessage) throw Error(response.data.errorMessage)
         payload.dataList = response.data;
       }).catch(
         function(err) {
@@ -101,13 +102,13 @@ const needsModule = {
         data: {}
       }
       let need = context.rootState.needs.dataList.find((c) => c.id === id)
-      // const need = false
       if (need) {
         payload.data = need;
       } else {
         const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs';
         await axios.get(`${url}/${id}`)
         .then(response => {
+          if (response.data.errorMessage) throw Error(response.data.errorMessage)
           payload.data = response.data[0];
         }).catch(
           function(err) {
@@ -127,6 +128,7 @@ const needsModule = {
       const user_id = context.rootState.user.data.id
       await axios.get(`${url}/${user_id}`, { params: { deal_status: 0 } })
       .then(response => {
+        if (response.data.errorMessage) throw Error(response.data.errorMessage)
         payload.dataList = response.data;
       }).catch(
         function(err) {
@@ -145,6 +147,7 @@ const needsModule = {
       const user_id = context.rootState.user.data.id
       await axios.get(`${url}/${user_id}`, { params: { deal_status: 1 } })
       .then(response => {
+        if (response.data.errorMessage) throw Error(response.data.errorMessage)
         payload.dataList = response.data;
       }).catch(
         function(err) {
@@ -190,7 +193,6 @@ const needsModule = {
       .then(() => {
         context.commit('hideLoadingModal');
         route.push('/')
-        // context.dispatch('getLatestsNeeds')
       })
       .catch(err => {
         console.log({err})
@@ -248,7 +250,6 @@ const needsModule = {
       .then(() => {
         context.commit('hideLoadingModal');
         route.push('/')
-        // context.dispatch('getLatestsNeeds')
       })
       .catch(err => {
         console.log({err})

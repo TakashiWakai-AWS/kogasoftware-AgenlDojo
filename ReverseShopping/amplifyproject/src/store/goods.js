@@ -82,7 +82,7 @@ const goodsModule = {
       const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/goods';
       await axios.get(`${url}/${params.id}`)
       .then(response => {
-        if (response.data.errorMessage) throw Error()
+        if (response.data.errorMessage) throw Error(response.data.errorMessage)
         payload.dataList = response.data;
       }).catch(
         function(err) {
@@ -104,6 +104,7 @@ const goodsModule = {
         const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods';
         await axios.get(`${url}/${params.id}`)
         .then(response => {
+          if (response.data.errorMessage) throw Error(response.data.errorMessage)
           payload.data = response.data[0];
         }).catch(
           function(err) {
@@ -123,6 +124,7 @@ const goodsModule = {
       const user_id = context.rootState.user.data.id
       await axios.get(`${url}/${user_id}`, { params: { deal_status: 0 } })
       .then(response => {
+        if (response.data.errorMessage) throw Error(response.data.errorMessage)
         payload.dataList = response.data;
       }).catch(
         function(err) {
@@ -141,6 +143,7 @@ const goodsModule = {
       const user_id = context.rootState.user.data.id
       await axios.get(`${url}/${user_id}`, { params: { deal_status: 1 } })
       .then(response => {
+        if (response.data.errorMessage) throw Error(response.data.errorMessage)
         payload.dataList = response.data;
       }).catch(
         function(err) {
@@ -270,7 +273,6 @@ const goodsModule = {
       .then(() => {
         context.commit('hideLoadingModal');
         route.push('/')
-        // context.dispatch('getLatestsNeeds')
       })
       .catch(err => {
         console.log({err})
