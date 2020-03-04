@@ -90,4 +90,7 @@ p {
   display: inline-block;
   width: 100%;
 }
+.nav-tabs {
+    border-bottom: none;
+}
 </style>

@@ -1,7 +1,9 @@
 <template>
   <div class="header fixed-top">
     <b-navbar id="header" toggleable="lg" type="dark" variant="#333">
-      <b-navbar-brand to="/">Reverse Shopping</b-navbar-brand>
+      <b-navbar-brand to="/"><img src="" alt="">
+        Reverse Shopping<img src="../assets/reverse.png" alt="logo" class="logo">
+      </b-navbar-brand>
         <b-navbar-nav class="ml-auto">
           <template v-if="isLoggedIn">
             <div id="user-link-wrapper" class="mr-4">
@@ -83,5 +85,10 @@ export default {
 
 #user-link {
   line-height: 30px;
+}
+.logo {
+  height: 40px;
+  width: 40px;
+  margin-left: 5px;
 }
 </style>

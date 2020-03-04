@@ -15,7 +15,7 @@
         </b-input-group>
         <b-button
           to="/needs-register"
-          class="red-button mt-4 ml-2"
+          class="button mt-4 ml-2"
           size="sm"
         >ニーズを登録する</b-button>
       </b-form>
