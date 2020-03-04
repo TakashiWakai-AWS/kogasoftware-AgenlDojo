@@ -1,4 +1,5 @@
 import axios from 'axios'
+import route from '../router/index.js'
 
 const goodsModule = {
   state: {
@@ -6,7 +7,7 @@ const goodsModule = {
     data: {},
     loading: false,
     dealingDataList: [],
-    dealdataLoading: false
+    dealdataLoading: false,
   },
   mutations: {
     getGoods(state, payload) {
@@ -89,10 +90,7 @@ const goodsModule = {
           context.commit('getError', '出品の取得に失敗しました。');
         }
       )
-      console.log({byneedsIdloading: context.state.loading})
       context.commit('getGoods', payload);
-      console.log({byneedsId: context.state.dataList})
-      console.log({byneedsIdloadint: context.state.loading})
     },
     async getGoodById(context, params) {
       context.commit('startGoodsLoading')
@@ -106,7 +104,6 @@ const goodsModule = {
         const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods';
         await axios.get(`${url}/${params.id}`)
         .then(response => {
-          console.log({getGoodById: response})
           payload.data = response.data[0];
         }).catch(
           function(err) {
@@ -154,6 +151,7 @@ const goodsModule = {
       context.commit('getDealingGoods', payload);
     },
     async insertGoods(context, { good, file, needs_id }) {
+      context.commit('showLoadingModal');
       const user_id = context.rootState.user.data.id
       const data = {
         user_id: user_id,
@@ -169,8 +167,7 @@ const goodsModule = {
       const alter_image_to_base64 = () => {
         return new Promise((resolve) => {
           const reader = new FileReader();
-          reader.onload = function(event) {
-            console.log(event);
+          reader.onload = function() {
             let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
             let binary_data = reader.result.split(',')[1];
             data['image'] = binary_data;
@@ -185,15 +182,20 @@ const goodsModule = {
       }
       await alter_image_to_base64();
       await axios.post(url, data)
-      .then(() => console.log('insert goods'))
+      .then(() => {
+        context.commit('hideLoadingModal');
+        route.push('/')
+      })
       .catch(
         function(err) {
           console.log({err})
+          context.commit('hideLoadingModal');
           context.commit('getError', '出品登録に失敗しました。');
         }
       )
     },
     async updateGoods(context, { good, file, needs_id, goods_id }) {
+      context.commit('showLoadingModal');
       const url = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods';
       const user_id = context.rootState.user.data.id
       const data = {
@@ -208,8 +210,7 @@ const goodsModule = {
       const alter_image_to_base64 = () => {
         return new Promise((resolve) => {
           const reader = new FileReader();
-          reader.onload = function(event) {
-            console.log(event);
+          reader.onload = function() {
             let image_content_type = reader.result.split(',')[0].split(';')[0].split(':')[1];
             let binary_data = reader.result.split(',')[1];
             data['image'] = binary_data;
@@ -222,58 +223,63 @@ const goodsModule = {
           };
         })
       }
-      console.log({updateGoodsData: data})
       if (file) await alter_image_to_base64()
       await axios.put(`${url}/${goods_id}`, data)
+      .then(() => {
+        context.commit('hideLoadingModal');
+        route.push('/')
+      })
       .catch(
         function(err) {
           console.log({err})
+          context.commit('hideLoadingModal');
           context.commit('getError', '出品登録に失敗しました。');
         }
       )
     },
     async purchase(context, { needs_id, goods_id }) {
+      context.commit('hideConfirmModal');
+      context.commit('showLoadingModal');
       const needsUrl = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/needs/status/${needs_id}`;
       const goodsUrl = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods/status/${goods_id}`;
       const data = { deal_status: 1 }
       await axios.put(needsUrl, data)
       .then((response) => {
         if (response.data.errorMessage) throw Error(response.data.errorMessage)
-        console.log('needs')
-        console.log(response)
-        console.log(data)
         axios.put(goodsUrl, data)
-        .then((response) => {
-          console.log('goods')
-          console.log(response)
-          context.commit('hideConfirmModal');
+        .then(() => {
+          context.commit('hideLoadingModal');
           context.commit('showCompleteModal', {
             text: '購入が完了しました。'
           })
         })
         .catch(err => {
-          console.log('good error')
           throw Error(err)
         });
       })
       .catch(err => {
         console.log({err})
-        context.commit('hideConfirmModal');
+        context.commit('hideLoadingModal');
         context.commit('getError', '購入に失敗しました。');
       });
     },
     async deleteGood(context, { id }) {
+      context.commit('showLoadingModal');
       const url = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/goods/status/${id}`;
       await axios.put(url, { deal_status: 3 })
       .then(() => {
-        console.log('delete good')
+        context.commit('hideLoadingModal');
+        route.push('/')
+        // context.dispatch('getLatestsNeeds')
       })
       .catch(err => {
         console.log({err})
+        context.commit('hideLoadingModal');
         context.commit('getError', '出品の削除に失敗しました。');
       });
     },
     async insertGoodsEvaluation(context, { goods_id, evaluation }) {
+      context.commit('showLoadingModal');
       const user_id = context.rootState.user.data.id
       const url = `https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/evaluation/goods`;
       await axios.post(url, {
@@ -282,10 +288,14 @@ const goodsModule = {
         user_id
       })
       .then(() => {
-        console.log('insert goods evaluation')
+        context.commit('hideLoadingModal');
+        context.commit('showCompleteModal', {
+          text: '評価が完了しました。'
+        })
       })
       .catch(err => {
         console.log({err})
+        context.commit('hideLoadingModal');
         context.commit('getError', '評価に失敗しました。');
       });
     },

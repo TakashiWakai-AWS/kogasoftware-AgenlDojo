@@ -23,17 +23,19 @@
         </b-row>
       </b-container>
       <div v-show="(isGoodsUser || isNeedsUser) && good.deal_status > 0" class="mx-auto mt-5">
-        <p class="d-inline">ユーザー評価</p>
-        <div>
-          <star-rating
-            v-model="evaluation"
-            :show-rating="false"
-            :star-size=30
-            inline
-            class="my-3"
-            :read-only="good.deal_status == 2"/>
+        <p v-if="isGoodsUser && !good.goods_evaluations_id" class="d-inline">お相手の評価をお待ちください</p>
+        <div v-else>
+          <p class="d-inline">ユーザー評価</p>
+          <div>
+            <star-rating
+              v-model="evaluation"
+              :show-rating="false"
+              :star-size=30
+              inline
+              class="my-3"/>
+          </div>
+          <b-button class="button mb-3" size="sm" @click="evaluate" :disabled="!evaluable">評価する</b-button>
         </div>
-        <b-button class="button mb-3" size="sm" @click="evaluate">評価する</b-button>
       </div>
     </div>
   </div>
@@ -50,7 +52,8 @@ export default {
       user_id: this.$store.state.user.data.id,
       isNeedsUser: false,
       isGoodsUser: false,
-      evaluation: 0
+      evaluation: 0,
+      evaluable: false
     }
   },
   props: {
@@ -92,6 +95,8 @@ export default {
       this.good = this.$store.state.goods.data
       this.isNeedsUser = this.$store.state.isLoggedIn && (this.$store.state.user.data.id == this.good.needs_user)
       this.isGoodsUser = this.$store.state.isLoggedIn && (this.user_id == this.good.user_id)
+      if (this.isNeedsUser) this.evaluable = !this.good.goods_evaluations_id
+      if (this.isGoodsUser) this.evaluable = !this.good.needs_evaluations_id
     });
   }
 }

@@ -48,7 +48,6 @@ export default {
   data: function () {
     return {
       need: {
-        price: 0,
         quantity: 1,
         start_at: moment().format("YYYY-MM-DD"),
         end_at: moment().add(1, 'months').format("YYYY-MM-DD")

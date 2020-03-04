@@ -26,6 +26,7 @@
     <ConfirmModal/>
     <CompleteModal/>
     <ErrorModal/>
+    <LoadingModal/>
   </div>
 </template>
 
@@ -35,6 +36,7 @@ import { mapState } from 'vuex'
 import ConfirmModal from '../components/ConfirmModal.vue'
 import CompleteModal from '../components/CompleteModal.vue'
 import ErrorModal from '../components/ErrorModal.vue'
+import LoadingModal from '../components/LoadingModal.vue'
 const logger = new Logger('Header'/*, 'ERROR'*/);
 
 export default {
@@ -56,6 +58,7 @@ export default {
       this.$store.commit('signOut');
       this.$store.commit('clearUser');
       this.$store.commit('hideConfirmModal')
+      this.$router.push('/')
     },
     confirm() {
       this.$store.commit('showConfirmModal', {
@@ -64,7 +67,7 @@ export default {
       })
     }
   },
-  components: { ConfirmModal, CompleteModal, ErrorModal }
+  components: { ConfirmModal, CompleteModal, ErrorModal, LoadingModal }
 }
 </script>
 

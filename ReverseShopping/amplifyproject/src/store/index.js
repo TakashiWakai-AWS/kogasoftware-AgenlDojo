@@ -6,6 +6,7 @@ import userModule from './user.js'
 import completeModalModule from './completeModal.js'
 import confirmModalModule from './confirmModal.js'
 import errorModalModule from './errorModal.js'
+import loadingModalModule from './loadingModal.js'
 
 Vue.use(Vuex)
 
@@ -30,6 +31,7 @@ export default new Vuex.Store({
     user: userModule,
     completeModal: completeModalModule,
     confirmModal: confirmModalModule,
-    errorModal: errorModalModule
+    errorModal: errorModalModule,
+    loadingModal: loadingModalModule
   },
 })
