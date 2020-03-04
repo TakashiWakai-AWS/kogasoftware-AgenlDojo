@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
 import NeedsList from "../components/NeedsList.vue"
 import GoodsList from "../components/GoodsList.vue"
 import Loading from "../components/Loading.vue"
@@ -73,10 +72,6 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      userData: state => state.user.data,
-      goods: state => state.goods.dataList
-    }),
     maskedPhoneNumber: function () {
       return this.userData.tel.slice(3).replace(/([0-9]{3})([0-9]+)([0-9]{4})/,
         (match, p1, p2, p3) => `${p1}${p2.replace(/./g, '*')}${p3}`
