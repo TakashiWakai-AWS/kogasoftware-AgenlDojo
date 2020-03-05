@@ -54,14 +54,14 @@ const userModule = {
         .catch(err => {
           logger.error('currentAuthenticatedUser error', err)
           isLoginProcess ?
-            context.commit('getError', 'ログインに失敗しました。') :
-            context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+            // context.commit('getError', 'ログインに失敗しました。') :
+            // context.commit('getError', 'ユーザー情報の取得に失敗しました。');
           context.commit('cancelSignIn');
         })
       if (!cognitoUser) {
         logger.debug('not authenticated')
         if (isLoginProcess) {
-          context.commit('getError', 'ログインに失敗しました。');
+          // context.commit('getError', 'ログインに失敗しました。');
         }
         context.commit('cancelSignIn');
         return
@@ -88,7 +88,7 @@ const userModule = {
         .then(response => response.data[0])
         .catch(err => {
           logger.error('getUserIdByEmail error', err);
-          context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+          // context.commit('getError', 'ユーザー情報の取得に失敗しました。');
           context.commit('cancelSignIn');
         })
       }
