@@ -53,9 +53,9 @@ const userModule = {
         // 取得できなければ認証ステータスをfalseに設定する
         .catch(err => {
           logger.error('currentAuthenticatedUser error', err)
-          isLoginProcess ?
-            // context.commit('getError', 'ログインに失敗しました。') :
-            // context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+          // isLoginProcess ?
+          //   context.commit('getError', 'ログインに失敗しました。') :
+          //   context.commit('getError', 'ユーザー情報の取得に失敗しました。');
           context.commit('cancelSignIn');
         })
       if (!cognitoUser) {
