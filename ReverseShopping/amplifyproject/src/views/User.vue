@@ -31,6 +31,16 @@
           <th>決済情報</th>
           <td>{{ maskedsettlementInfo }}</td>
         </tr>
+        <tr>
+          <th>平均評価</th>
+          <td class="pt-1"><star-rating
+            v-model="userData.evaluation"
+            increment=0.1
+            :star-size=20
+            inline
+            read-only/>
+          </td>
+        </tr>
       </table>
       <div v-show="dealingNeeds.length > 0">
         <h2>取引中ニーズ一覧</h2>
@@ -57,10 +67,11 @@ import GoodsList from "../components/GoodsList.vue"
 import Loading from "../components/Loading.vue"
 import Need from "../components/Need.vue"
 import { mapState } from "vuex"
+import StarRating from 'vue-star-rating'
 
 export default {
   name: 'User',
-  components: { NeedsList, GoodsList, Loading, Need },
+  components: { NeedsList, GoodsList, Loading, Need, StarRating },
   async beforeCreate() {
     this.$store.dispatch('getUserInfoFromCognito').then(() => {
     this.$store.dispatch('getNeedsByUserId');

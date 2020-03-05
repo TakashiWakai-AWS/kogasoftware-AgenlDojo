@@ -13,6 +13,7 @@ const userModule = {
       'tel': '',
       'email': '',
       'settlementInfo': '*************',
+      'evaluation': 0,
     },
   },
   mutations: {
@@ -30,6 +31,9 @@ const userModule = {
     },
     getUserId(state, userId) {
       state.data.id = userId
+    },
+    getUserEvaluation(state, evaluation) {
+      state.data.evaluation = evaluation
     },
     startUserLoading(state) {
       state.loading = true
@@ -49,15 +53,15 @@ const userModule = {
         // 取得できなければ認証ステータスをfalseに設定する
         .catch(err => {
           logger.error('currentAuthenticatedUser error', err)
-          // isLoginProcess ?
-            // context.commit('getError', 'ログインに失敗しました。'); :
-            // context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+          isLoginProcess ?
+            context.commit('getError', 'ログインに失敗しました。') :
+            context.commit('getError', 'ユーザー情報の取得に失敗しました。');
           context.commit('cancelSignIn');
         })
       if (!cognitoUser) {
         logger.debug('not authenticated')
         if (isLoginProcess) {
-          // context.commit('getError', 'ログインに失敗しました。');
+          context.commit('getError', 'ログインに失敗しました。');
         }
         context.commit('cancelSignIn');
         return
@@ -68,6 +72,10 @@ const userModule = {
 
       const { id } = await getUserIdByEmail(cognitoUser.attributes.email)
       context.commit('getUserId', id);
+
+      const evaluationUrl = 'https://v39tpetcnj.execute-api.ap-northeast-1.amazonaws.com/dev/api/v0/user/evaluation'
+      await axios.get(`${evaluationUrl}/${id}`)
+      .then((response) => context.commit('getUserEvaluation',response.data))
 
       context.commit('endUserLoading')
 
@@ -80,7 +88,7 @@ const userModule = {
         .then(response => response.data[0])
         .catch(err => {
           logger.error('getUserIdByEmail error', err);
-          // context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+          context.commit('getError', 'ユーザー情報の取得に失敗しました。');
           context.commit('cancelSignIn');
         })
       }
