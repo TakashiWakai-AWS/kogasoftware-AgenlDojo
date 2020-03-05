@@ -2,7 +2,7 @@
   <div class="home mt-5">
     <Loading v-if="this.$store.state.needs.loading"/>
     <div v-else>
-      <b-form>
+      <b-form @submit.prevent="search">
         <b-input-group class="w-50 mx-auto">
           <b-form-input
             id="search"
@@ -13,12 +13,12 @@
             <b-icon icon="search" aria-hidden="true"></b-icon>
           </b-button>
         </b-input-group>
-        <b-button
-          to="/needs-register"
-          class="button mt-4 ml-2"
-          size="sm"
-        >ニーズを登録する</b-button>
       </b-form>
+      <b-button
+        class="button mt-4 ml-2"
+        @click="checkLogin"
+        size="sm"
+      >ニーズを登録する</b-button>
       <!-- <b-button class="button mt-4" size="sm" @click="getAll">検索クリア</b-button> -->
       <h2>ニーズ一覧</h2>
       <NeedsList></NeedsList>
@@ -48,6 +48,10 @@ export default {
     getAll() {
       // this.$store.dispatch('getNeedsTest');
       this.$store.dispatch('getLatestsNeeds');
+    },
+    checkLogin() {
+      if (!this.$store.state.isLoggedIn) this.$store.commit('notLogedInError')
+      else this.$router.push('/needs-register')
     }
   }
 }

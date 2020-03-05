@@ -16,7 +16,10 @@
             <p>期限：{{ need.end_at | moment("YYYY/MM/DD") }}</p>
             <p>備考：{{ need.note }}</p>
             <b-button :to="{name: 'needs-edit', params: {id: need.id}}" class="button" size="sm" v-if="editable">編集</b-button>
-            <b-button :to="{name: 'goods-register', query: { needs_id: need.id} }" class="button" size="sm" v-if="salable">出品</b-button>
+            <b-button @click="checkLogin"
+              class="button" size="sm" v-if="salable">
+              出品
+            </b-button>
           </b-col>
         </b-row>
       </b-container>
@@ -75,6 +78,12 @@ export default {
     })
     // this.$store.dispatch('getGoodsTest');
   },
+  methods: {
+    checkLogin() {
+      if (!this.$store.state.isLoggedIn) this.$store.commit('notLogedInError')
+      else this.$router.push({name: 'goods-register', query: { needs_id: this.need.id} })
+    }
+  }
 }
 </script>
 <style scoped>
