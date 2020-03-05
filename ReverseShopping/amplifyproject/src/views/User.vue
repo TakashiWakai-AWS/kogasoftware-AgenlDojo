@@ -62,7 +62,18 @@ export default {
   name: 'User',
   components: { NeedsList, GoodsList, Loading, Need },
   async beforeCreate() {
-    this.$store.dispatch('getUserInfoFromCognito');
+    this.$store.dispatch('getUserInfoFromCognito').then(() => {
+    this.$store.dispatch('getNeedsByUserId');
+    this.$store.dispatch('getGoodsByUserId').then(() => {
+      this.goods = this.$store.state.goods.dataList;
+    });
+    this.$store.dispatch('getDealingGoods').then(() => {
+      this.dealingGoods = this.$store.state.goods.dealingDataList;
+    });
+    this.$store.dispatch('getDealingNeeds').then(() => {
+      this.dealingNeeds = this.$store.state.needs.dealingDataList;
+    });
+    });
   },
   data() {
     return {
@@ -86,18 +97,6 @@ export default {
       userData: state => state.user.data,
     })
   },
-  created() {
-    this.$store.dispatch('getNeedsByUserId');
-    this.$store.dispatch('getGoodsByUserId').then(() => {
-      this.goods = this.$store.state.goods.dataList;
-    });
-    this.$store.dispatch('getDealingGoods').then(() => {
-      this.dealingGoods = this.$store.state.goods.dealingDataList;
-    });
-    this.$store.dispatch('getDealingNeeds').then(() => {
-      this.dealingNeeds = this.$store.state.needs.dealingDataList;
-    });
-  }
 }
 </script>
 
