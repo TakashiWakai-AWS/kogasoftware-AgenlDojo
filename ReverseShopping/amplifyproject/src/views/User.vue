@@ -33,7 +33,7 @@
         </tr>
         <tr>
           <th>平均評価</th>
-          <td v-if="userData.evaluation < 0">評価なし</td>
+          <td v-if="userData.evaluation < 0 || !userData.evaluation">評価なし</td>
           <td class="pt-1" v-else><star-rating
             v-model="userData.evaluation"
             increment=0.1
