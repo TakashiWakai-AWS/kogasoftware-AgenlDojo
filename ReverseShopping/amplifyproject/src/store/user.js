@@ -48,20 +48,26 @@ const userModule = {
   actions: {
     async getUserInfoFromCognito(context, { isLoginProcess } = { isLoginProcess: false }) {
       context.commit('startUserLoading')
+      const cognitoUserInfo = await Auth.currentUserInfo()
+      if (!cognitoUserInfo) {
+        logger.debug('not authenticated')
+        context.commit('cancelSignIn');
+        return
+      }
       // Auth.currentAuthenticatedUser()でユーザ情報を取得する。
       const cognitoUser = await Auth.currentAuthenticatedUser()
         // 取得できなければ認証ステータスをfalseに設定する
         .catch(err => {
           logger.error('currentAuthenticatedUser error', err)
-          // isLoginProcess ?
-          //   context.commit('getError', 'ログインに失敗しました。') :
-          //   context.commit('getError', 'ユーザー情報の取得に失敗しました。');
+          if(isLoginProcess){
+            context.commit('getError', 'ログインに失敗しました。');
+          }
           context.commit('cancelSignIn');
         })
       if (!cognitoUser) {
         logger.debug('not authenticated')
         if (isLoginProcess) {
-          // context.commit('getError', 'ログインに失敗しました。');
+          context.commit('getError', 'ログインに失敗しました。');
         }
         context.commit('cancelSignIn');
         return
@@ -70,6 +76,12 @@ const userModule = {
 
       context.commit('getUserInfo', cognitoUser);
 
+      const email = cognitoUser.attributes.email
+      if (!email) {
+        logger.error('email does not exist')
+        context.commit('cancelSignIn');
+        return
+      }
       const { id } = await getUserIdByEmail(cognitoUser.attributes.email)
       context.commit('getUserId', id);
 
