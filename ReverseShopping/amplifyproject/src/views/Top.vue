@@ -1,0 +1,64 @@
+<template>
+  <div class="home mt-5">
+    <Loading v-if="this.$store.state.needs.loading"/>
+    <div v-else>
+      <b-form @submit.prevent="search">
+        <b-input-group class="w-50 mx-auto">
+          <b-form-input
+            id="search"
+            placeholder="ニーズを検索してください"
+            v-model="item_name"
+          ></b-form-input>
+          <b-button class="button" size="sm" @click="search" :disabled="!item_name">
+            <b-icon icon="search" aria-hidden="true"></b-icon>
+          </b-button>
+        </b-input-group>
+      </b-form>
+      <b-button
+        class="button mt-4 ml-2"
+        @click="checkLogin"
+        size="sm"
+      >ニーズを登録する</b-button>
+      <!-- <b-button class="button mt-4" size="sm" @click="getAll">検索クリア</b-button> -->
+      <h2>ニーズ一覧</h2>
+      <NeedsList></NeedsList>
+    </div>
+  </div>
+</template>
+
+<script>
+import NeedsList from "../components/NeedsList.vue"
+import Loading from "../components/Loading.vue"
+
+export default {
+  name: 'Top',
+  data () {
+    return {
+      item_name: ''
+    }
+  },
+  components: { NeedsList, Loading },
+  mounted() {
+    this.getAll();
+  },
+  methods: {
+    search() {
+      if(this.item_name) this.$store.dispatch('searchNeedsByItemName', { item_name: this.item_name});
+    },
+    getAll() {
+      // this.$store.dispatch('getNeedsTest');
+      this.$store.dispatch('getLatestsNeeds');
+    },
+    checkLogin() {
+      if (!this.$store.state.isLoggedIn) this.$store.commit('notLogedInError')
+      else this.$router.push('/needs-register')
+    }
+  }
+}
+</script>
+
+<style scoped>
+h2 {
+  margin-top: 100px;
+}
+</style>
